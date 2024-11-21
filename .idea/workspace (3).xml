@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="def2800e-f43f-461e-9b4f-8a435c81e099" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2ntoF48pEKkEr1m8zSH1E4KVelf" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/YandexDisk/YandexDisk/Учёба/5 семестр/УПП/Проект/OfficeDeviceProject&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.16436781&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="ru.golyashchuk.carparking.models.car" />
+      <recent name="ru.golyashchuk.carparking.models" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\YandexDisk\YandexDisk\Учёба\5 семестр\КГ\Курсовая\CarParkingProject\src\main\resources" />
+      <recent name="C:\YandexDisk\YandexDisk\Учёба\5 семестр\КГ\Курсовая\CarParkingProject\src\main\java\ru\golyashchuk\carparking" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\YandexDisk\YandexDisk\Учёба\5 семестр\КГ\Курсовая\CarParkingProject\src\main\resources\cars\png" />
+      <recent name="C:\YandexDisk\YandexDisk\Учёба\5 семестр\КГ\Курсовая\CarParkingProject\src\main\resources\cars" />
+      <recent name="C:\YandexDisk\YandexDisk\Учёба\5 семестр\КГ\Курсовая\CarParkingProject\src\main\resources" />
+      <recent name="C:\YandexDisk\YandexDisk\Учёба\5 семестр\КГ\Курсовая\CarParkingProject\src\png\cars" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="ru.golyashchuk.carparking.models" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="CarParking" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="openjdk-23" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="ru.golyashchuk.carparking.CarParkingApplication" />
+      <module name="CarParkingProject" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;C:\Program Files\Java\javafx-sdk-23.0.1\lib&quot; --add-modules javafx.controls,javafx.fxml" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="def2800e-f43f-461e-9b4f-8a435c81e099" name="Changes" comment="" />
+      <created>1729801628452</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1729801628452</updated>
+      <workItem from="1729801629554" duration="254000" />
+      <workItem from="1729881393405" duration="30623000" />
+      <workItem from="1730041974630" duration="2393000" />
+      <workItem from="1730230742107" duration="2232000" />
+      <workItem from="1730296129787" duration="1859000" />
+      <workItem from="1730535684616" duration="6146000" />
+      <workItem from="1730714755262" duration="902000" />
+      <workItem from="1730821281941" duration="686000" />
+      <workItem from="1730833742767" duration="9520000" />
+      <workItem from="1730911717368" duration="11643000" />
+      <workItem from="1730983487930" duration="21000" />
+      <workItem from="1731072196769" duration="757000" />
+      <workItem from="1731501973585" duration="138000" />
+      <workItem from="1731502137352" duration="2746000" />
+      <workItem from="1731694154364" duration="11313000" />
+      <workItem from="1732191993298" duration="17000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
