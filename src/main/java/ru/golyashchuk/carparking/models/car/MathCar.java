@@ -2,6 +2,7 @@ package ru.golyashchuk.carparking.models.car;
 
 
 import javafx.geometry.Point2D;
+import ru.golyashchuk.carparking.utils.RectCoordinateSystem;
 
 public class MathCar {
     // center of the car
@@ -9,8 +10,8 @@ public class MathCar {
     double y;
 
     double carOrientation; // radians
-    double axleBase = 62; // length between front and roar wheel axles
-    double distanceWheels = 43; // length between wheels
+    double axleBase = 63; // length between front and roar wheel axles
+    double distanceWheels = 42; // length between wheels
     double wheelsOrientation; // regarding carOrientation (radians)
     double speed; // linear speed of the car
 
@@ -83,13 +84,20 @@ public class MathCar {
     }
 
     private void moveAndTurn(double time) {
+        System.out.println("rf = " + calculateRadiusFrontWheel());
+        System.out.println("w = " + calculateRotationalSpeed());
+        System.out.println("r0 = " + calculateRadiusCenterCar());
+        System.out.println(calculateCircleCenter());
+
         double rCenter = calculateRadiusCenterCar();
         double w = calculateRotationalSpeed();
         double dopAlpha = Math.asin(axleBase / 2 / rCenter);
+        dopAlpha = Math.asin(axleBase / 2 / rCenter);
         Point2D circleCenterPoint = calculateCircleCenter();
         carOrientation += w * time;
         x = circleCenterPoint.getX() + rCenter * Math.sin(carOrientation + dopAlpha);
         y = circleCenterPoint.getY() - rCenter * Math.cos(carOrientation + dopAlpha);
+
     }
 
     private void moveForward(double time) {
@@ -107,20 +115,31 @@ public class MathCar {
     }
 
     private double calculateRadiusCenterCar() {
-        return Math.sqrt(Math.pow(distanceWheels / 2 + axleBase / Math.tan(Math.abs(wheelsOrientation)), 2) + Math.pow(axleBase / 2, 2));
+        double r = Math.sqrt(Math.pow(distanceWheels / 2 + axleBase / Math.tan(Math.abs(wheelsOrientation)), 2) + Math.pow(axleBase / 2, 2));
+        if (wheelsOrientation < 0) {
+            return -r;
+        }
+        return r;
     }
 
     private Point2D calculateCircleCenter() {
         double xcCar = distanceWheels / 2 + axleBase / Math.abs(Math.tan(wheelsOrientation));
-        if (wheelsOrientation < 0) {
-            xcCar = -xcCar;
-        }
-
         double ycCar = -axleBase / 2;
 
-        double xc = -xcCar * Math.sin(carOrientation) + ycCar * Math.cos(carOrientation) + x;
-        double yc = xcCar * Math.cos(carOrientation) + ycCar * Math.sin(carOrientation) + y;
+        if (wheelsOrientation < 0) {
+            xcCar = -xcCar;
 
-        return new Point2D(xc, yc);
+            RectCoordinateSystem rcs = new RectCoordinateSystem(x, y, Math.toRadians(90) + carOrientation);
+            return rcs.getAnotherRCSPoint(xcCar, ycCar);
+        }
+        System.out.println("xcCar = " + xcCar);
+        System.out.println("ycCar = " + ycCar);
+        RectCoordinateSystem rcs = new RectCoordinateSystem(x, y, Math.toRadians(90) + carOrientation);
+        return rcs.getAnotherRCSPoint(xcCar, ycCar);
+
+//        double xc = -xcCar * Math.sin(carOrientation) + ycCar * Math.cos(carOrientation) + x;
+//        double yc = xcCar * Math.cos(carOrientation) + ycCar * Math.sin(carOrientation) + y;
+//
+//        return new Point2D(xc, yc);
     }
 }

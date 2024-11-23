@@ -55,6 +55,7 @@ public class GameController {
         final long startNanoTime = System.nanoTime();
         long prevNanoTime = startNanoTime;
         final LongProperty lastUpdateTime = new SimpleLongProperty();
+        focusedCar.updateCarPosition(0);
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
