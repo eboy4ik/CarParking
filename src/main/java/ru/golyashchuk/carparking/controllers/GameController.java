@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Shape;
 import ru.golyashchuk.carparking.models.car.Car;
 import ru.golyashchuk.carparking.models.car.CarEnum;
 
@@ -46,8 +47,16 @@ public class GameController {
 
         Car car = new Car(500, 500, 0);
         car.setCarModel(CarEnum.YELLOWCAR.getCarModel());
+        this.gamePane.getChildren().add(car.getBounds());
+
         this.gamePane.getChildren().add(car.getCarModel().getCarModel());
         focusedCar = car;
+
+        Car car2 = new Car(800, 500, 0);
+        car2.setCarModel(CarEnum.YELLOWCAR.getCarModel());
+        this.gamePane.getChildren().add(car2.getBounds());
+        this.gamePane.getChildren().add(car2.getCarModel().getCarModel());
+
 
 //        while (true) {
 //            updateCarMovement();
@@ -56,17 +65,27 @@ public class GameController {
         long prevNanoTime = startNanoTime;
         final LongProperty lastUpdateTime = new SimpleLongProperty();
         focusedCar.updateCarPosition(0);
+        car2.updateCarPosition(0);
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 long t = now - lastUpdateTime.get();
                 updateCarMovement((double) t / 1000000000);
 //                updateCarMovement();
+//                System.out.println(focusedCar.getCarModel().getCarModel().getBoundsInParent());
+                if (checkCollistion(car, car2)) {
+                    System.out.println("COLLISTION");
+                }
                 lastUpdateTime.set(now);
             }
 
         };
         timer.start();
+    }
+
+    private boolean checkCollistion(Car car, Car car2) {
+        Shape shape = Shape.intersect(car.getBounds(), car2.getBounds());
+        return shape.getBoundsInParent().getWidth() > 0;
     }
 
     private void updateCarMovement(double t) {

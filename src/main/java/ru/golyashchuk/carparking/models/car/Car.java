@@ -1,16 +1,13 @@
 package ru.golyashchuk.carparking.models.car;
 
-import javafx.scene.Group;
 
-public class Car extends MathCar {
-//    private double x, y;
-//    private double orientation; // в градусах
-//    private double currentSteeringAngle; // в градусах
-//    private double speed; // в пикселях
+public class Car extends PhysicCar {
     private double maxSteeringAngle = 30; // в градусах
-    private double maxSpeed = 500; // в пикселях
+    private double maxSpeed = 200; // в пикселях
 
     private CarModel carModel;
+
+//    public static Car DEFAULT_CAR = new
 
     public Car(double x, double y, double orientation) {
         super();
@@ -18,6 +15,7 @@ public class Car extends MathCar {
         this.y = y;
         this.carOrientation = Math.toRadians(orientation);
     }
+
 
     public CarModel getCarModel() {
         return carModel;
@@ -43,7 +41,6 @@ public class Car extends MathCar {
     public void updateCarPosition(double t) {
         super.updateCarPosition(t);
 
-        System.out.println(x + " " + y);
 
         carModel.setPosition(x, y);
         carModel.rotate(Math.toDegrees(carOrientation));

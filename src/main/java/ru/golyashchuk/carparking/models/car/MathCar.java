@@ -2,9 +2,17 @@ package ru.golyashchuk.carparking.models.car;
 
 
 import javafx.geometry.Point2D;
+import ru.golyashchuk.carparking.utils.Beam;
 import ru.golyashchuk.carparking.utils.RectCoordinateSystem;
 
 public class MathCar {
+    public static final MathCarBuilder DEFAULT_MATHCAR_BUILDER = new MathCarBuilder() {
+        {
+            axleBase(63).distanceWheels(42);
+        }
+    };
+    public static final MathCar DEFAULT_MATHCAR = new MathCar(DEFAULT_MATHCAR_BUILDER);
+    private static final double WHEELS_ORIENTATION_EPSILON = 0.001;
     // center of the car
     double x;
     double y;
@@ -15,7 +23,18 @@ public class MathCar {
     double wheelsOrientation; // regarding carOrientation (radians)
     double speed; // linear speed of the car
 
+
     public MathCar() {
+    }
+
+    public MathCar(MathCarBuilder mathCarBuilder) {
+        this.x = mathCarBuilder.getX();
+        this.y = mathCarBuilder.getY();
+        this.carOrientation = mathCarBuilder.getCarOrientation();
+        this.axleBase = mathCarBuilder.getAxleBase();
+        this.distanceWheels = mathCarBuilder.getDistanceWheels();
+        this.wheelsOrientation = mathCarBuilder.getWheelsOrientation();
+        this.speed = mathCarBuilder.getSpeed();
     }
 
     public double getX() {
@@ -74,36 +93,39 @@ public class MathCar {
         this.speed = speed;
     }
 
-    public void updateCarPosition(double time) {
-        if (Math.abs(wheelsOrientation) <= 0.001) {
-            moveForward(time);
-            return;
-        }
 
-        moveAndTurn(time);
+    public void updateCarPosition(double time) {
+        moveTo(getNewCoordinates(time));
     }
 
-    private void moveAndTurn(double time) {
-        System.out.println("rf = " + calculateRadiusFrontWheel());
-        System.out.println("w = " + calculateRotationalSpeed());
-        System.out.println("r0 = " + calculateRadiusCenterCar());
-        System.out.println(calculateCircleCenter());
+    public Beam getNewCoordinates(double time) {
+        if (Math.abs(wheelsOrientation) <= MathCar.WHEELS_ORIENTATION_EPSILON) {
+            return getBeamIfMoveForward(time);
+        }
+        return getBeamIfMoveAndTurn(time);
+    }
 
+    public void moveTo(Beam beam) {
+        carOrientation = beam.getOrientation();
+        x = beam.getX();
+        y = beam.getY();
+    }
+
+    private Beam getBeamIfMoveAndTurn(double time) {
         double rCenter = calculateRadiusCenterCar();
         double w = calculateRotationalSpeed();
         double dopAlpha = Math.asin(axleBase / 2 / rCenter);
-        dopAlpha = Math.asin(axleBase / 2 / rCenter);
         Point2D circleCenterPoint = calculateCircleCenter();
-        carOrientation += w * time;
-        x = circleCenterPoint.getX() + rCenter * Math.sin(carOrientation + dopAlpha);
-        y = circleCenterPoint.getY() - rCenter * Math.cos(carOrientation + dopAlpha);
-
+        double newOrientation = carOrientation + w * time;
+        double newX = circleCenterPoint.getX() + rCenter * Math.sin(newOrientation + dopAlpha);
+        double newY = circleCenterPoint.getY() - rCenter * Math.cos(newOrientation + dopAlpha);
+        return new Beam(newX, newY, newOrientation);
     }
 
-    private void moveForward(double time) {
-        x += speed * Math.cos(carOrientation) * time;
-        y += speed * Math.sin(carOrientation) * time;
-
+    private Beam getBeamIfMoveForward(double time) {
+        double newX = x + speed * Math.cos(carOrientation) * time;
+        double newY = y + speed * Math.sin(carOrientation) * time;
+        return new Beam(newX, newY, carOrientation);
     }
 
     private double calculateRotationalSpeed() {
@@ -132,14 +154,7 @@ public class MathCar {
             RectCoordinateSystem rcs = new RectCoordinateSystem(x, y, Math.toRadians(90) + carOrientation);
             return rcs.getAnotherRCSPoint(xcCar, ycCar);
         }
-        System.out.println("xcCar = " + xcCar);
-        System.out.println("ycCar = " + ycCar);
         RectCoordinateSystem rcs = new RectCoordinateSystem(x, y, Math.toRadians(90) + carOrientation);
         return rcs.getAnotherRCSPoint(xcCar, ycCar);
-
-//        double xc = -xcCar * Math.sin(carOrientation) + ycCar * Math.cos(carOrientation) + x;
-//        double yc = xcCar * Math.cos(carOrientation) + ycCar * Math.sin(carOrientation) + y;
-//
-//        return new Point2D(xc, yc);
     }
 }
