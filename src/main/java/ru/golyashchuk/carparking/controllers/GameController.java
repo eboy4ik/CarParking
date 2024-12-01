@@ -3,107 +3,92 @@ package ru.golyashchuk.carparking.controllers;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.shape.Shape;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import ru.golyashchuk.carparking.config.SettingsConfiguration;
+import ru.golyashchuk.carparking.models.arena.ArenaController;
+import ru.golyashchuk.carparking.models.arena.ArenaLevel1;
 import ru.golyashchuk.carparking.models.car.Car;
-import ru.golyashchuk.carparking.models.car.CarEnum;
+import ru.golyashchuk.carparking.models.car.Direction;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class GameController {
-    private Car focusedCar;
+    private final Stage primaryStage;
+    private ArenaController arenaController;
     private final Set<KeyCode> pressedKeys = new HashSet<>();
 
-    @FXML
-    private Pane gamePane;
-
-//    @FXML
-//    private Button pauseButton;
-
-//    @FXML
-//    void onPause(ActionEvent event) {
-//        // Оставьте пустым или добавьте логику для паузы
-//    }
-
-    @FXML
-    void onKeyPressed(KeyEvent event) {
-        pressedKeys.add(event.getCode());
+    public GameController(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+        initialize();
     }
 
-    @FXML
-    void onKeyReleased(KeyEvent event) {
-        pressedKeys.remove(event.getCode());
-    }
+    private void initialize() {
+        BorderPane gamePane = new BorderPane();
 
-    @FXML
-    public void initialize() {
-//        gamePane.getScene().getRoot().requestFocus();
+        arenaController = new ArenaController(new ArenaLevel1());
 
-        Car car = new Car(500, 500, 0);
-        car.setCarModel(CarEnum.YELLOWCAR.getCarModel());
-        this.gamePane.getChildren().add(car.getBounds());
+        gamePane.setCenter(arenaController.getArenaView().getView());
 
-        this.gamePane.getChildren().add(car.getCarModel().getCarModel());
-        focusedCar = car;
+        gamePane.setOnKeyPressed(this::onKeyPressed);
+        gamePane.setOnKeyReleased(this::onKeyReleased);
+        arenaController.getArenaView().getView().setOnMouseClicked(this::onMouseClicled);
 
-        Car car2 = new Car(800, 500, 0);
-        car2.setCarModel(CarEnum.YELLOWCAR.getCarModel());
-        this.gamePane.getChildren().add(car2.getBounds());
-        this.gamePane.getChildren().add(car2.getCarModel().getCarModel());
-
-
-//        while (true) {
-//            updateCarMovement();
-//        }
-        final long startNanoTime = System.nanoTime();
-        long prevNanoTime = startNanoTime;
         final LongProperty lastUpdateTime = new SimpleLongProperty();
-        focusedCar.updateCarPosition(0);
-        car2.updateCarPosition(0);
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                long t = now - lastUpdateTime.get();
-                updateCarMovement((double) t / 1000000000);
-//                updateCarMovement();
-//                System.out.println(focusedCar.getCarModel().getCarModel().getBoundsInParent());
-                if (checkCollistion(car, car2)) {
-                    System.out.println("COLLISTION");
+                double elapsedSeconds = (now - lastUpdateTime.get()) / 1_000_000_000.0;
+                if (arenaController.checkWin()) {
+                    System.out.println("WIIIN");
                 }
+                updateCarMovement(elapsedSeconds);
+                arenaController.getArenaView().renderAll();
                 lastUpdateTime.set(now);
             }
-
         };
         timer.start();
+
+        Scene gameScene = new Scene(gamePane, SettingsConfiguration.getWindowWidth(), SettingsConfiguration.getWindowHeight());
+        primaryStage.setScene(gameScene);
+        primaryStage.show();
+
+        gamePane.requestFocus();
     }
 
-    private boolean checkCollistion(Car car, Car car2) {
-        Shape shape = Shape.intersect(car.getBounds(), car2.getBounds());
-        return shape.getBoundsInParent().getWidth() > 0;
+    private void onMouseClicled(MouseEvent mouseEvent) {
+        arenaController.focusCar(mouseEvent.getX(), mouseEvent.getY());
     }
 
-    private void updateCarMovement(double t) {
+    private void onKeyPressed(KeyEvent event) {
+        pressedKeys.add(event.getCode());
+    }
+
+    private void onKeyReleased(KeyEvent event) {
+        pressedKeys.remove(event.getCode());
+    }
+
+    private void updateCarMovement(double time) {
+        HashSet<Direction> directions = new HashSet<>();
         if (pressedKeys.contains(KeyCode.W)) {
-            focusedCar.moveForward(t);
+            directions.add(Direction.FORWARD);
         }
         if (pressedKeys.contains(KeyCode.S)) {
-            focusedCar.moveBackward(t);
+            directions.add(Direction.BACK);
         }
         if (pressedKeys.contains(KeyCode.A)) {
-            focusedCar.turnLeft();
+            directions.add(Direction.LEFT);
         }
         if (pressedKeys.contains(KeyCode.D)) {
-            focusedCar.turnRight();
+            directions.add(Direction.RIGHT);
         }
-        // Если ни "A" ни "D" не нажаты, выравниваем колеса
-        if (!pressedKeys.contains(KeyCode.A) && !pressedKeys.contains(KeyCode.D)) {
-            focusedCar.straightWheels();
-        }
+
+        arenaController.moveFocusCar(directions, time);
     }
+
 }

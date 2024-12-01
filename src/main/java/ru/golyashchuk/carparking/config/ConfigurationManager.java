@@ -1,5 +1,6 @@
 package ru.golyashchuk.carparking.config;
 
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class ConfigurationManager {
@@ -9,6 +10,12 @@ public class ConfigurationManager {
     }
 
     public static String getProperty(String key) {
-        return resourceBundle.getString(key);
+        String result;
+        try {
+            result = resourceBundle.getString(key);
+        } catch (MissingResourceException e) {
+            return null;
+        }
+        return result;
     }
 }

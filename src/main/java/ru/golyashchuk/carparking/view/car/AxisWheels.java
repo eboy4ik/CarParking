@@ -1,30 +1,30 @@
-package ru.golyashchuk.carparking.models.car;
+package ru.golyashchuk.carparking.view.car;
 
 import javafx.scene.Group;
+import ru.golyashchuk.carparking.view.View;
 
-public class AxisWheels {
-    private Group axisModel;
+public class AxisWheels implements View {
+    private Group view;
     private double distanceWheels;
     private Wheel leftWheel;
     private Wheel rightWheel;
-    private int angleRotation;
 
     public AxisWheels(double x, double y, double distanceWheels) {
         double r = distanceWheels / 2;
         this.distanceWheels = distanceWheels;
         this.leftWheel = new Wheel(x, y - r, 20, 5);
         this.rightWheel = new Wheel(x, y + r, 20, 5);
-        this.axisModel = new Group();
-        this.axisModel.getChildren().add(leftWheel.getWheelModel());
-        this.axisModel.getChildren().add(rightWheel.getWheelModel());
+        this.view = new Group();
+        this.view.getChildren().add(leftWheel.getView());
+        this.view.getChildren().add(rightWheel.getView());
     }
 
     public double getDistanceWheels() {
         return distanceWheels;
     }
 
-    public Group getAxisModel() {
-        return axisModel;
+    public Group getView() {
+        return view;
     }
 
     public double getXCenterAxisWheels() {
@@ -35,13 +35,6 @@ public class AxisWheels {
         return (rightWheel.getCenterY() + leftWheel.getCenterY()) / 2;
     }
 
-    public Wheel getLeftWheel() {
-        return leftWheel;
-    }
-
-    public Wheel getRightWheel() {
-        return rightWheel;
-    }
 
     public void rotateWheels(double angle) {
         leftWheel.rotate(angle);

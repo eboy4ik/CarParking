@@ -1,14 +1,19 @@
-package ru.golyashchuk.carparking.models.car;
+package ru.golyashchuk.carparking.view.car;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import ru.golyashchuk.carparking.config.ConfigurationManager;
+import ru.golyashchuk.carparking.models.car.Car;
+import ru.golyashchuk.carparking.view.car.AxisWheels;
+import ru.golyashchuk.carparking.view.car.CarView;
+import ru.golyashchuk.carparking.view.car.ICar;
+import ru.golyashchuk.carparking.view.car.Transmission;
 
 public enum CarEnum implements ICar {
     YELLOWCAR {
         @Override
-        public CarModel getCarModel() {
-            CarModel carModel = new CarModel();
+        public CarView getCarModel(Car car) {
+            CarView carModel = new CarView(car);
             Image carImage = new Image(ConfigurationManager.getProperty("path.car.yellowcar"));
 
             ImageView body = new ImageView(carImage);

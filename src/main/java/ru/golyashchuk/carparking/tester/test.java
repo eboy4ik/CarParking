@@ -31,18 +31,18 @@ public class test extends Application {
     public void start(Stage stage) throws IOException {
 
         Rectangle rect = new Rectangle(200, 100, 400, 200);
-        Rectangle rect2 = new Rectangle(500, 500, 100, 100);
+        Rectangle rect2 = new Rectangle(400, 100, 100, 100);
         rect2.setRotate(45);
         rect2.setFill(Color.rgb(255, 0, 255));
         rect.setFill(Color.rgb(255, 0, 0));
 
         rect.setX(200);
         Shape shape = Shape.intersect(rect, rect2);
-//        System.out.println(rect.intersects(rect2));
-        System.out.println(shape.getBoundsInLocal().getWidth());
-        System.out.println(shape.isVisible());
-//        System.out.println((rect.getBoundsInParent().intersects(rect2.getBoundsInParent())));
-        System.out.println(Shape.intersect(rect, rect2));
+
+//        System.out.println(Shape.intersect(rect, rect2));
+        System.out.println(shape.getBoundsInParent());
+        System.out.println(rect2.getBoundsInParent());
+        System.out.println(shape.getBoundsInParent().equals(rect2.getBoundsInParent()));
         Pane root = new Pane();
         root.getChildren().add(rect);
         root.getChildren().add(rect2);

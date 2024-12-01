@@ -14,14 +14,14 @@ public class MathCar {
     public static final MathCar DEFAULT_MATHCAR = new MathCar(DEFAULT_MATHCAR_BUILDER);
     private static final double WHEELS_ORIENTATION_EPSILON = 0.001;
     // center of the car
-    double x;
-    double y;
+    private double x;
+    private double y;
 
-    double carOrientation; // radians
-    double axleBase = 63; // length between front and roar wheel axles
-    double distanceWheels = 42; // length between wheels
-    double wheelsOrientation; // regarding carOrientation (radians)
-    double speed; // linear speed of the car
+    private double carOrientation; // radians
+    private double axleBase = 63; // length between front and roar wheel axles
+    private double distanceWheels = 42; // length between wheels
+    private double wheelsOrientation; // regarding carOrientation (radians)
+    private double speed; // linear speed of the car
 
 
     public MathCar() {
@@ -96,6 +96,10 @@ public class MathCar {
 
     public void updateCarPosition(double time) {
         moveTo(getNewCoordinates(time));
+    }
+
+    public Beam getCurrentCoordinates() {
+        return new Beam(x, y, carOrientation);
     }
 
     public Beam getNewCoordinates(double time) {
