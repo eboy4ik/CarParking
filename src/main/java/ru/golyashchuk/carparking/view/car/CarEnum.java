@@ -14,13 +14,18 @@ public enum CarEnum implements ICar {
         @Override
         public CarView getCarModel(Car car) {
             CarView carModel = new CarView(car);
-            Image carImage = new Image(ConfigurationManager.getProperty("path.car.yellowcar"));
+//            Image carImage = new Image(ConfigurationManager.getProperty("path.car.yellowcar"));
+            Image carImage = new Image(ConfigurationManager.getProperty("path.car.graycar.car"));
+            Image focusedCarImage = new Image("cars/png/graycar/focusedcar.png");
 
+            carModel.setFocusedCar(focusedCarImage);
+            carModel.setDefaultCar(carImage);
             ImageView body = new ImageView(carImage);
             double length = 102;
             double width = 47;
             body.setFitWidth(length);
             body.setFitHeight(width);
+
             double distanceWheels = width - 4;
             carModel.setBody(body);
 

@@ -2,6 +2,7 @@ package ru.golyashchuk.carparking.view.car;
 
 
 import javafx.scene.Group;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -11,11 +12,14 @@ import ru.golyashchuk.carparking.view.View;
 
 
 public class CarView implements Renderer, View {
-    public final static int OUTLINE_WIDTH = 3;
-    public final static int OUTLINE_OFFSET = 20;
+    public final static int OUTLINE_WIDTH = 2;
+    public final static int OUTLINE_OFFSET = 10;
     private final Car car;
     private Rectangle outline;
     private Group view;
+    private Image focusedCar;
+    private Image defaultCar;
+    private Image mainCar;
     private ImageView body;
     private Transmission transmission;
 
@@ -51,6 +55,17 @@ public class CarView implements Renderer, View {
         this.body = body;
     }
 
+    public void setFocusedCar(Image focusedCar) {
+        this.focusedCar = focusedCar;
+    }
+
+    public void setDefaultCar(Image defaultCar) {
+        this.defaultCar = defaultCar;
+    }
+
+    public void setMainCar(Image mainCar) {
+        this.mainCar = mainCar;
+    }
 
     public void setPosition(double x, double y) {
         view.setLayoutX(x);
@@ -66,11 +81,11 @@ public class CarView implements Renderer, View {
     }
 
     public void focusCar() {
-        outline.setStroke(Color.rgb(0, 255, 0, 0.5));
+        body.setImage(focusedCar);
     }
 
     public void unfocusCar() {
-        outline.setStroke(Color.TRANSPARENT);
+        body.setImage(defaultCar);
     }
 
     public void mainCar() {
