@@ -7,12 +7,13 @@ import javafx.scene.shape.Shape;
 import ru.golyashchuk.carparking.models.car.listeners.CollisionListener;
 import ru.golyashchuk.carparking.models.car.listeners.FutureCollisionListener;
 import ru.golyashchuk.carparking.utils.Beam;
+import ru.golyashchuk.carparking.utils.ShapeHandler;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class PhysicCar extends MathCar implements Collisional {
-    public static PhysicCar DEFAULT_PHYSICCAR = new PhysicCar(100, 45, MathCar.DEFAULT_MATHCAR_BUILDER);
+    public static PhysicCar DEFAULT_PHYSICCAR = new PhysicCar(100, 40, MathCar.DEFAULT_MATHCAR_BUILDER);
     private Rectangle bounds;
     private Rectangle futureBounds;
 
@@ -23,8 +24,11 @@ public class PhysicCar extends MathCar implements Collisional {
     public PhysicCar() {
         super(MathCar.DEFAULT_MATHCAR_BUILDER);
         bounds = new Rectangle(PhysicCar.DEFAULT_PHYSICCAR.bounds.getWidth(), PhysicCar.DEFAULT_PHYSICCAR.bounds.getHeight());
+        bounds.setArcHeight(30);
+        bounds.setArcWidth(30);
         updateBounds(getCurrentCoordinates());
-        futureBounds = new Rectangle(bounds.getWidth(), bounds.getHeight());
+//        futureBounds = new Rectangle(bounds.getWidth(), bounds.getHeight());
+        futureBounds = ShapeHandler.copyRectangle(bounds);
         bounds.setFill(Color.rgb(0, 255, 255));
     }
 

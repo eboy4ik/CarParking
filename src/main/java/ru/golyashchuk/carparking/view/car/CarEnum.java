@@ -14,6 +14,33 @@ public enum CarEnum implements ICar {
         @Override
         public CarView getCarModel(Car car) {
             CarView carModel = new CarView(car);
+            Image carImage = new Image(ConfigurationManager.getProperty("path.car.yellowcar"));
+
+            carModel.setDefaultCar(carImage);
+            ImageView body = new ImageView(carImage);
+            double length = car.getBounds().getWidth();
+            double width = car.getBounds().getHeight();
+            body.setFitWidth(length);
+            body.setFitHeight(width);
+
+            double distanceWheels = car.getDistanceWheels();
+            carModel.setBody(body);
+
+            Transmission transmission = new Transmission();
+            transmission.setFrontAxisWheels(new AxisWheels(length - 20, width / 2, distanceWheels));
+            transmission.setRearAxisWheels(new AxisWheels(20, width / 2, distanceWheels));
+            transmission.rebuild();
+
+            carModel.setTransmission(transmission);
+            carModel.rebuild();
+            return carModel;
+        }
+    },
+
+    GRAYCAR {
+        @Override
+        public CarView getCarModel(Car car) {
+            CarView carModel = new CarView(car);
 //            Image carImage = new Image(ConfigurationManager.getProperty("path.car.yellowcar"));
             Image carImage = new Image(ConfigurationManager.getProperty("path.car.graycar.car"));
             Image focusedCarImage = new Image("cars/png/graycar/focusedcar.png");
@@ -21,12 +48,15 @@ public enum CarEnum implements ICar {
             carModel.setFocusedCar(focusedCarImage);
             carModel.setDefaultCar(carImage);
             ImageView body = new ImageView(carImage);
-            double length = 102;
-            double width = 47;
+            double length = car.getBounds().getWidth();
+            double width = car.getBounds().getHeight();
+            double widthView = width / 0.84;
+            body.setY(-widthView * 0.08);
             body.setFitWidth(length);
-            body.setFitHeight(width);
+            body.setFitHeight(widthView);
 
-            double distanceWheels = width - 4;
+            double distanceWheels = car.getDistanceWheels();
+
             carModel.setBody(body);
 
             Transmission transmission = new Transmission();
@@ -39,6 +69,5 @@ public enum CarEnum implements ICar {
             return carModel;
         }
     }
-
 
 }

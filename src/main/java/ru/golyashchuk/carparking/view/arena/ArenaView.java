@@ -1,7 +1,6 @@
 package ru.golyashchuk.carparking.view.arena;
 
 
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import ru.golyashchuk.carparking.models.arena.Arena;
@@ -32,6 +31,15 @@ public class ArenaView implements Renderer, View {
         initializeFinish();
         initializeCars();
         initializeCollisions();
+    }
+
+    public void updateAllViews() {
+        updateCarViews();
+    }
+
+    private void updateCarViews() {
+        cars.clear();
+        initializeCars();
     }
 
     public void focusCar(Car car) {
@@ -71,7 +79,9 @@ public class ArenaView implements Renderer, View {
     public void renderAll() {
         renderArenaBounds();
         renderCars();
-        finish.render();
+        if (finish != null) {
+            finish.render();
+        }
         renderCollisions();
     }
 
@@ -84,16 +94,22 @@ public class ArenaView implements Renderer, View {
     }
 
     private void initializeFinish() {
-        this.finish = new FinishView(arena.getFinish());
-        this.view.getChildren().add(finish.getView());
+        if (arena.getFinish() != null) {
+            this.finish = new FinishView(arena.getFinish());
+            this.view.getChildren().add(finish.getView());
+        }
     }
 
     private void initializeCars() {
         for (Car car : arena.getCars()) {
-            CarView carView = CarEnum.YELLOWCAR.getCarModel(car);
+            CarView carView = CarEnum.GRAYCAR.getCarModel(car);
             cars.add(carView);
             this.view.getChildren().add(carView.getView());
         }
+    }
+
+    private void deleteCarView(CarView carView) {
+        cars.remove(carView);
     }
 
     private void initializeCollisions() {

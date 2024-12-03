@@ -42,7 +42,7 @@ public class ArenaController {
     public void moveFocusCar(Set<Direction> direction, double t) {
         Car focusedCar = arena.getFocusedCar();
         focusedCar.straightWheels();
-        focusedCar.stop();
+//        focusedCar.stop();
         if (direction.contains(Direction.LEFT)) {
             focusedCar.turnLeft();
         }
@@ -50,13 +50,22 @@ public class ArenaController {
             focusedCar.turnRight();
         }
         if (direction.contains(Direction.BACK)) {
-            focusedCar.back();
+            focusedCar.back(t);
         }
         if (direction.contains(Direction.FORWARD)) {
-            focusedCar.forward();
+            focusedCar.forward(t);
+        }
+
+        if (direction.contains(Direction.BRAKE)) {
+            focusedCar.brake(t);
+        }
+
+        if (!direction.contains(Direction.FORWARD) && !direction.contains(Direction.BACK)) {
+            focusedCar.slowly(t);
         }
 
         if (willCollisionWithOther(focusedCar, t) || willBehindArena(focusedCar, t)) {
+            focusedCar.stop();
             return;
         }
 

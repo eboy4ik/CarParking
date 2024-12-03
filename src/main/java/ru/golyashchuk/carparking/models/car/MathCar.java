@@ -8,7 +8,7 @@ import ru.golyashchuk.carparking.utils.RectCoordinateSystem;
 public class MathCar {
     public static final MathCarBuilder DEFAULT_MATHCAR_BUILDER = new MathCarBuilder() {
         {
-            axleBase(63).distanceWheels(42);
+            axleBase(60).distanceWheels(35);
         }
     };
     public static final MathCar DEFAULT_MATHCAR = new MathCar(DEFAULT_MATHCAR_BUILDER);

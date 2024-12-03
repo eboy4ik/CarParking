@@ -38,6 +38,10 @@ public class MenuController {
             }
         });
 
+        Button createLevelButton = new Button("Cоздать уровень");
+        createLevelButton.setFont(new javafx.scene.text.Font("System Bold", 18));
+        createLevelButton.setOnAction(e -> startLevelEditor());
+        
         Button settingsButton = new Button("Настройки");
         settingsButton.setFont(new javafx.scene.text.Font("System Bold", 18));
         settingsButton.setOnAction(e -> openSettings());
@@ -47,7 +51,7 @@ public class MenuController {
         exitButton.setOnAction(e -> System.exit(0));
 
         // Добавляем кнопки в VBox
-        menuLayout.getChildren().addAll(playButton, settingsButton, exitButton);
+        menuLayout.getChildren().addAll(playButton, createLevelButton, settingsButton, exitButton);
 
         // Устанавливаем сцену на Stage
         Scene menuScene = new Scene(menuLayout, SettingsConfiguration.getWindowWidth(), SettingsConfiguration.getWindowHeight());
@@ -56,7 +60,11 @@ public class MenuController {
         primaryStage.show();
     }
 
-    void startGame() throws IOException {
+    private void startLevelEditor() {
+        new LevelEditorController(primaryStage);
+    }
+
+    private void startGame() throws IOException {
         new GameController(primaryStage);
     }
 

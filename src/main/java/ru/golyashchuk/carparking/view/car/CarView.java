@@ -7,6 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import ru.golyashchuk.carparking.models.car.Car;
+import ru.golyashchuk.carparking.utils.ShapeHandler;
 import ru.golyashchuk.carparking.view.Renderer;
 import ru.golyashchuk.carparking.view.View;
 
@@ -16,6 +17,7 @@ public class CarView implements Renderer, View {
     public final static int OUTLINE_OFFSET = 10;
     private final Car car;
     private Rectangle outline;
+    private Rectangle bounds;
     private Group view;
     private Image focusedCar;
     private Image defaultCar;
@@ -27,6 +29,14 @@ public class CarView implements Renderer, View {
     public CarView(Car car) {
         this.car = car;
         initializeOutline();
+
+        bounds = ShapeHandler.copyRectangle(car.getBounds());
+        bounds.setX(0);
+        bounds.setY(0);
+//        bounds = new Rectangle(car.getBounds().getWidth(), car.getBounds().getHeight());
+//        bounds.setArcWidth(car.getBounds().getArcWidth());
+//        bounds.setArcHeight(car.getBounds().getArcHeight());
+        bounds.setFill(Color.BLUE);
     }
 
 
@@ -36,6 +46,7 @@ public class CarView implements Renderer, View {
 
     public void rebuild() {
         this.view = new Group();
+        view.getChildren().add(bounds);
         view.getChildren().add(transmission.getView());
         view.getChildren().add(outline);
         view.getChildren().add(body);

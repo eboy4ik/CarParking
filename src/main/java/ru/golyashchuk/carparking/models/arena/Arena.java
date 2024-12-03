@@ -19,6 +19,9 @@ public class Arena {
 
     private Car focusedCar;
 
+    public Arena() {
+    }
+
     public int getWidth() {
         return width;
     }
@@ -66,11 +69,6 @@ public class Arena {
     public Car getFocusedCar() {
         return focusedCar;
     }
-
-    //    public Arena(int width, int length) {
-//        Rectangle arenaRect = new Rectangle(width, length);
-//        arenaRect.getBounds();
-//    }
 
     public void addCar(Car car) {
         if (!cars.contains(car)) {

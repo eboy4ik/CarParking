@@ -87,6 +87,9 @@ public class GameController {
         if (pressedKeys.contains(KeyCode.D)) {
             directions.add(Direction.RIGHT);
         }
+        if (pressedKeys.contains(KeyCode.SPACE)) {
+            directions.add(Direction.BRAKE);
+        }
 
         arenaController.moveFocusCar(directions, time);
     }
