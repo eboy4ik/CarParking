@@ -25,8 +25,8 @@ public class ArenaView implements Renderer, View {
     public ArenaView(Arena arena) {
         this.arena = arena;
         this.view = new Pane();
-        view.setMaxWidth(arena.getWidth() + 20);
-        view.setMaxHeight(arena.getHeight() + 20);
+        view.setMaxWidth(arena.getWidth());
+        view.setMaxHeight(arena.getHeight());
         initializeBounds();
         initializeFinish();
         initializeCars();

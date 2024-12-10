@@ -33,9 +33,6 @@ public class CarView implements Renderer, View {
         bounds = ShapeHandler.copyRectangle(car.getBounds());
         bounds.setX(0);
         bounds.setY(0);
-//        bounds = new Rectangle(car.getBounds().getWidth(), car.getBounds().getHeight());
-//        bounds.setArcWidth(car.getBounds().getArcWidth());
-//        bounds.setArcHeight(car.getBounds().getArcHeight());
         bounds.setFill(Color.BLUE);
     }
 

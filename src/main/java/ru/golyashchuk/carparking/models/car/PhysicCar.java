@@ -4,22 +4,16 @@ package ru.golyashchuk.carparking.models.car;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-import ru.golyashchuk.carparking.models.car.listeners.CollisionListener;
-import ru.golyashchuk.carparking.models.car.listeners.FutureCollisionListener;
 import ru.golyashchuk.carparking.utils.Beam;
 import ru.golyashchuk.carparking.utils.ShapeHandler;
 
-import java.util.LinkedList;
-import java.util.List;
+
 
 public class PhysicCar extends MathCar implements Collisional {
     public static PhysicCar DEFAULT_PHYSICCAR = new PhysicCar(100, 40, MathCar.DEFAULT_MATHCAR_BUILDER);
+//    private double offsetBody = -100; // regarding center of the car
     private Rectangle bounds;
     private Rectangle futureBounds;
-
-    private List<CollisionListener> collisionListeners = new LinkedList<>();
-    private List<FutureCollisionListener> futureCollisionListeners = new LinkedList<>();
-    private boolean inCollision = false;
 
     public PhysicCar() {
         super(MathCar.DEFAULT_MATHCAR_BUILDER);
@@ -27,7 +21,6 @@ public class PhysicCar extends MathCar implements Collisional {
         bounds.setArcHeight(30);
         bounds.setArcWidth(30);
         updateBounds(getCurrentCoordinates());
-//        futureBounds = new Rectangle(bounds.getWidth(), bounds.getHeight());
         futureBounds = ShapeHandler.copyRectangle(bounds);
         bounds.setFill(Color.rgb(0, 255, 255));
     }
@@ -72,14 +65,6 @@ public class PhysicCar extends MathCar implements Collisional {
         super.updateCarPosition(time);
     }
 
-    public void addFutureCollisionListener(FutureCollisionListener listener) {
-        futureCollisionListeners.add(listener);
-    }
-
-    public void addCollisionListener(CollisionListener collisionListener) {
-        collisionListeners.add(collisionListener);
-    }
-
     public Rectangle getFutureBounds(double time) {
         updateFutureBounds(getNewCoordinates(time));
         return futureBounds;
@@ -95,27 +80,8 @@ public class PhysicCar extends MathCar implements Collisional {
 
     public boolean checkCollision(PhysicCar otherCar) {
         Shape shape = Shape.intersect(this.getBounds(), otherCar.getBounds());
-        boolean result = shape.getBoundsInParent().getWidth() > 0;
-        if (result != inCollision) {
-            inCollision = result;
-            notifyCollisionListeners();
-        }
-        return result;
+        return shape.getBoundsInParent().getWidth() > 0;
     }
-
-    private void notifyCollisionListeners() {
-        if (inCollision) {
-            for (CollisionListener collisionListener : collisionListeners) {
-                collisionListener.enterCollision(this);
-            }
-            return;
-        }
-
-        for (CollisionListener collisionListener : collisionListeners) {
-            collisionListener.outCollision(this);
-        }
-    }
-
 
     private void updateBounds(Beam beam) {
         updateRectangle(bounds, beam);

@@ -16,7 +16,6 @@ public class MathCar {
     // center of the car
     private double x;
     private double y;
-
     private double carOrientation; // radians
     private double axleBase = 63; // length between front and roar wheel axles
     private double distanceWheels = 42; // length between wheels
@@ -118,7 +117,7 @@ public class MathCar {
     private Beam getBeamIfMoveAndTurn(double time) {
         double rCenter = calculateRadiusCenterCar();
         double w = calculateRotationalSpeed();
-        double dopAlpha = Math.asin(axleBase / 2 / rCenter);
+        double dopAlpha = Math.asin((axleBase / 2) / rCenter);
         Point2D circleCenterPoint = calculateCircleCenter();
         double newOrientation = carOrientation + w * time;
         double newX = circleCenterPoint.getX() + rCenter * Math.sin(newOrientation + dopAlpha);
@@ -141,7 +140,7 @@ public class MathCar {
     }
 
     private double calculateRadiusCenterCar() {
-        double r = Math.sqrt(Math.pow(distanceWheels / 2 + axleBase / Math.tan(Math.abs(wheelsOrientation)), 2) + Math.pow(axleBase / 2, 2));
+        double r = Math.sqrt(Math.pow(distanceWheels / 2 + (axleBase) / Math.tan(Math.abs(wheelsOrientation)), 2) + Math.pow(axleBase / 2, 2));
         if (wheelsOrientation < 0) {
             return -r;
         }

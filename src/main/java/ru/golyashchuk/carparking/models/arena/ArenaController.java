@@ -24,9 +24,7 @@ public class ArenaController {
 
     public void focusCar(double x, double y) {
         Point2D point = new Point2D(x, y);
-        System.out.println(point);
         for (Car car : arena.getCars()) {
-            System.out.println(car.getCollision());
             if (car.getCollision().contains(point)) {
                 focusCar(car);
             }

@@ -1,26 +1,23 @@
 package ru.golyashchuk.carparking.controllers;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import ru.golyashchuk.carparking.CarParkingApplication;
 import ru.golyashchuk.carparking.config.SettingsConfiguration;
 
 import java.io.IOException;
 
-public class MenuController {
-    private final Stage primaryStage;
+public class MenuController implements Controller {
+    private Stage primaryStage;
 
     public MenuController(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-        initialize();
+        initializeScene(primaryStage);
     }
 
-    private void initialize() {
+    @Override
+    public void initializeScene(Stage stage) {
+        this.primaryStage = stage;
         // Создаем VBox для кнопок
         VBox menuLayout = new VBox();
         menuLayout.setSpacing(10);
@@ -41,7 +38,7 @@ public class MenuController {
         Button createLevelButton = new Button("Cоздать уровень");
         createLevelButton.setFont(new javafx.scene.text.Font("System Bold", 18));
         createLevelButton.setOnAction(e -> startLevelEditor());
-        
+
         Button settingsButton = new Button("Настройки");
         settingsButton.setFont(new javafx.scene.text.Font("System Bold", 18));
         settingsButton.setOnAction(e -> openSettings());
@@ -54,7 +51,12 @@ public class MenuController {
         menuLayout.getChildren().addAll(playButton, createLevelButton, settingsButton, exitButton);
 
         // Устанавливаем сцену на Stage
-        Scene menuScene = new Scene(menuLayout, SettingsConfiguration.getWindowWidth(), SettingsConfiguration.getWindowHeight());
+        Scene menuScene;
+        if (primaryStage.getScene() == null) {
+            menuScene = new Scene(menuLayout, SettingsConfiguration.getWindowWidth(), SettingsConfiguration.getWindowHeight());
+        } else {
+            menuScene = new Scene(menuLayout, primaryStage.getScene().getWidth(), primaryStage.getScene().getHeight());
+        }
         primaryStage.setScene(menuScene);
         primaryStage.setTitle("Car Parking");
         primaryStage.show();
@@ -71,4 +73,6 @@ public class MenuController {
     private void openSettings() {
         System.out.println("Открытие настроек...");
     }
+
+
 }

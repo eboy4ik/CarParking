@@ -15,11 +15,6 @@ public class Car extends PhysicCar {
     }
 
 
-    @Override
-    public void updateCarPosition(double t) {
-        super.updateCarPosition(t);
-    }
-
     public void move(double t) {
         updateCarPosition(t);
     }
