@@ -7,6 +7,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.shape.Rectangle;
+import ru.golyashchuk.carparking.models.ModelType;
 import ru.golyashchuk.carparking.models.arena.Arena;
 import ru.golyashchuk.carparking.models.arena.ArenaEditor;
 import ru.golyashchuk.carparking.models.car.Car;
@@ -15,7 +16,6 @@ import ru.golyashchuk.carparking.view.View;
 public class ArenaEditorView implements View {
     private BorderPane view;
     private final ArenaEditor editor;
-    private Car car;
 
     public ArenaEditorView(ArenaEditor editor) {
         this.editor = editor;
@@ -34,28 +34,19 @@ public class ArenaEditorView implements View {
         FlowPane flowPane = new FlowPane();
         flowPane.setAlignment(Pos.CENTER);
         view.setTop(flowPane);
+
+        Button noneButton = new Button("None");
+        noneButton.setOnAction(event -> editor.setSelectedModel(null));
+
         Button carButton = new Button("Car");
+        carButton.setOnAction(event -> editor.setSelectedModel(ModelType.CAR));
+
         Button finishButton = new Button("Finish");
+        finishButton.setOnAction(event -> editor.setSelectedModel(ModelType.FINISH));
         Button collisionButton = new Button("Collisional");
-        flowPane.getChildren().addAll(carButton, finishButton, collisionButton);
+        collisionButton.setOnAction(event -> editor.setSelectedModel(ModelType.COLLISION));
 
-        editor.getArenaView().getView().setOnMouseClicked(this::onMouseClicked);
-//        editor.getArenaView().getView().setOnMouseDragged(this::onMouseDragged);
-    }
-
-    private void onMouseDragged(MouseEvent mouseEvent) {
-        car.setX(mouseEvent.getX());
-        car.setY(mouseEvent.getY());
-//        editor.getArenaView().render();
-        Rectangle rect = new Rectangle();
-//        rect.set
-    }
-
-    private void onMouseClicked(MouseEvent mouseEvent) {
-        System.out.println(mouseEvent.getX() + "  " + mouseEvent.getY());
-        this.car = new Car(mouseEvent.getX(), mouseEvent.getY(), 0);
-        editor.addCar(this.car);
-//        editor.getArenaView().render();
+        flowPane.getChildren().addAll(noneButton, carButton, finishButton, collisionButton);
     }
 
 }

@@ -7,8 +7,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import ru.golyashchuk.carparking.config.SettingsConfiguration;
+import ru.golyashchuk.carparking.models.ModelType;
 import ru.golyashchuk.carparking.models.arena.Arena;
 import ru.golyashchuk.carparking.models.arena.ArenaEditor;
 import ru.golyashchuk.carparking.models.car.Car;
@@ -23,7 +25,6 @@ import java.util.Optional;
 public class LevelEditorController implements Controller {
     private Stage primaryStage;
     private ArenaEditor editor;
-    private Car car;
 
     public LevelEditorController(Stage primaryStage) {
         initializeScene(primaryStage);
@@ -37,23 +38,26 @@ public class LevelEditorController implements Controller {
         editor = new ArenaEditor();
         ArenaEditorView arenaEditorView = new ArenaEditorView(editor);
         pane.setCenter(arenaEditorView.getView());
-        this.car = new Car(0, 0, 0);
-//        gamePane.setCenter(arenaController.getArenaView().getView());
-//
-//        gamePane.setOnKeyPressed(this::onKeyPressed);
-//        gamePane.setOnKeyReleased(this::onKeyReleased);
-//        editor.getArenaView().getView().setOnMouseClicked(this::onMouseClicked);
-//        editor.getArenaView().getView().setOnMouseDragged(this::onMouseDragged);
 
-//        editor.getArenaView().getView().setOnMouseDragged(this::onMouseDragged);
-//        editor.getArenaView().getView().setOnMouseDragReleased(this::onMouseDragged);
-//
+        editor.getArenaView().getView().setOnMouseClicked(this::onMouseClicked);
+
+
         pane.setOnKeyPressed(this::onKeyPressed);
         Scene scene = new Scene(pane, SettingsConfiguration.getWindowWidth(), SettingsConfiguration.getWindowHeight());
         primaryStage.setScene(scene);
         primaryStage.show();
 
         pane.requestFocus();
+    }
+
+
+    private void onMouseClicked(MouseEvent mouseEvent) {
+        if (editor.getSelectedModel() == null) {
+            editor.focus(mouseEvent.getX(), mouseEvent.getY());
+            return;
+        }
+
+        editor.addObject(mouseEvent.getX(), mouseEvent.getY());
     }
 
     private void onKeyPressed(KeyEvent keyEvent) {

@@ -45,7 +45,7 @@ public class ArenaView implements Renderer, View {
     public void focusCar(Car car) {
         for (CarView carView : cars) {
             if (carView.getCar() == car) {
-                carView.focusCar();
+                carView.focus();
             }
         }
     }
@@ -53,7 +53,7 @@ public class ArenaView implements Renderer, View {
     public void unfocusCar(Car car) {
         for (CarView carView : cars) {
             if (carView.getCar() == car) {
-                carView.unfocusCar();
+                carView.unfocus();
             }
         }
     }

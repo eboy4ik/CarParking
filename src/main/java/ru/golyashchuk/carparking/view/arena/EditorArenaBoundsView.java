@@ -19,7 +19,8 @@ public class EditorArenaBoundsView implements Renderer, View {
 
     @Override
     public void render() {
-
+        view.setX(0);
+        view.setY(0);
     }
 
     @Override

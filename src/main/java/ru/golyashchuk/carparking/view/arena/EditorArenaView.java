@@ -4,8 +4,10 @@ import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import ru.golyashchuk.carparking.models.Collision;
 import ru.golyashchuk.carparking.models.arena.Arena;
 import ru.golyashchuk.carparking.models.car.Car;
+import ru.golyashchuk.carparking.models.car.Collisional;
 import ru.golyashchuk.carparking.view.Renderer;
 import ru.golyashchuk.carparking.view.View;
 import ru.golyashchuk.carparking.view.car.CarEnum;
@@ -18,11 +20,21 @@ public class EditorArenaView implements Renderer, View {
     private Arena arena;
     private Pane view;
     private EditorArenaBoundsView bounds;
+    private FinishView finish;
     private List<CarView> cars = new LinkedList<>();
+    private List<EditorCollisionView> collisions = new LinkedList<>();
 
     public EditorArenaView(Arena arena) {
         this.arena = arena;
         initialize();
+    }
+
+    public void setFinish(Rectangle finish) {
+        if (this.finish != null) {
+            view.getChildren().remove(this.finish.getView());
+        }
+        this.finish = new FinishView(finish);
+        view.getChildren().add(this.finish.getView());
     }
 
     private void initialize() {
@@ -32,7 +44,23 @@ public class EditorArenaView implements Renderer, View {
         view.maxWidthProperty().bind(bounds.getView().getRectangle().widthProperty());
         view.maxHeightProperty().bind(bounds.getView().getRectangle().heightProperty());
         bounds.getView().getRectangle().setFill(Color.TRANSPARENT);
-        view.getChildren().add(bounds.getView());
+        view.getChildren().addAll(bounds.getView());
+    }
+
+    public EditorArenaBoundsView getBounds() {
+        return bounds;
+    }
+
+    public FinishView getFinish() {
+        return finish;
+    }
+
+    public List<CarView> getCars() {
+        return cars;
+    }
+
+    public List<EditorCollisionView> getCollisions() {
+        return collisions;
     }
 
     @Override
@@ -42,7 +70,7 @@ public class EditorArenaView implements Renderer, View {
 
     @Override
     public void render() {
-
+        bounds.render();
     }
 
     public void addCar(Car car) {
@@ -50,6 +78,13 @@ public class EditorArenaView implements Renderer, View {
         cars.add(carView);
         this.view.getChildren().add(carView.getView());
         carView.render();
+    }
+
+    public void addCollision(Collision collisional) {
+        EditorCollisionView collisionView = new EditorCollisionView(collisional);
+        collisions.add(collisionView);
+        this.view.getChildren().add(collisionView.getView());
+        collisionView.render();
     }
 
     private void initializeCars() {

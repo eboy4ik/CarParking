@@ -1,7 +1,9 @@
 package ru.golyashchuk.carparking.models.car;
 
 
-public class Car extends PhysicCar {
+import ru.golyashchuk.carparking.models.Model;
+
+public class Car extends PhysicCar implements Model {
     private double maxSteeringAngle = 30; // в градусах
     private double maxSpeed = 300; // в пикселях
     private double a = 200;

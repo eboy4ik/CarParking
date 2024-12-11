@@ -10,9 +10,10 @@ import ru.golyashchuk.carparking.models.car.Car;
 import ru.golyashchuk.carparking.utils.ShapeHandler;
 import ru.golyashchuk.carparking.view.Renderer;
 import ru.golyashchuk.carparking.view.View;
+import ru.golyashchuk.carparking.view.arena.Focusable;
 
 
-public class CarView implements Renderer, View {
+public class CarView implements Renderer, View, Focusable {
     public final static int OUTLINE_WIDTH = 2;
     public final static int OUTLINE_OFFSET = 10;
     private final Car car;
@@ -88,11 +89,13 @@ public class CarView implements Renderer, View {
         transmission.rotate(steeringAngle);
     }
 
-    public void focusCar() {
+    @Override
+    public void focus() {
         body.setImage(focusedCar);
     }
 
-    public void unfocusCar() {
+    @Override
+    public void unfocus() {
         body.setImage(defaultCar);
     }
 

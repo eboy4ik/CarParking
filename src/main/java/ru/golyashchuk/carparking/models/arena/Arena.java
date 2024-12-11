@@ -14,8 +14,8 @@ public class Arena {
 
     private Car mainCar;
     private Rectangle finish;
-    private List<Car> cars = new LinkedList<Car>();
-    private List<Collisional> collisions;
+    private List<Car> cars = new LinkedList<>();
+    private List<Collisional> collisions = new LinkedList<>();
 
     private Car focusedCar;
 
