@@ -6,11 +6,10 @@ import ru.golyashchuk.carparking.view.Renderer;
 import ru.golyashchuk.carparking.view.View;
 
 public class CollisionView implements Renderer, View {
-    Rectangle collision;
     Rectangle view;
 
-    public CollisionView(Rectangle collision) {
-        this.collision = collision;
+    public CollisionView(Rectangle model) {
+
     }
 
     @Override

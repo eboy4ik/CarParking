@@ -11,19 +11,17 @@ public class ArenaBoundsView implements Renderer, View {
     private Group view;
     private Rectangle freeArea;
     private Rectangle wall;
-    private Rectangle model;
 
     public ArenaBoundsView(Rectangle model) {
-        this.model = model;
-        initializeWall();
-        initializeFreeArea();
+        initializeWall(model);
+        initializeFreeArea(model);
         rebuild();
     }
 
     @Override
     public void render() {
-        initializeWall();
-        initializeFreeArea();
+//        initializeWall(model);
+//        initializeFreeArea(model);
         rebuild();
     }
 
@@ -32,14 +30,14 @@ public class ArenaBoundsView implements Renderer, View {
         return view;
     }
 
-    private void initializeWall() {
+    private void initializeWall(Rectangle model) {
         wall = new Rectangle(model.getWidth() + WALL_WIDTH * 2, model.getHeight() + WALL_WIDTH * 2);
         wall.setX(-WALL_WIDTH);
         wall.setY(-WALL_WIDTH);
         wall.setFill(Color.BLACK);
     }
 
-    private void initializeFreeArea() {
+    private void initializeFreeArea(Rectangle model) {
         freeArea = new Rectangle(model.getWidth(), model.getHeight());
         freeArea.setFill(Color.rgb(255, 255, 255, 1));
     }

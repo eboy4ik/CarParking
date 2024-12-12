@@ -31,6 +31,14 @@ public class ArenaEditor {
         arenaView = new EditorArenaView(arena);
     }
 
+    public Focusable getFocusable() {
+        return focusable;
+    }
+
+    public void setFocusable(Focusable focusable) {
+        this.focusable = focusable;
+    }
+
     public Arena getArena() {
         return arena;
     }
@@ -77,10 +85,10 @@ public class ArenaEditor {
         unfocus();
 
         for (CarView carView : arenaView.getCars()) {
-            if (carView.getCar().getBounds().contains(x, y)) {
-                carView.focus();
-                focusable = carView;
-            }
+//            if (carView.getCar().getBounds().contains(x, y)) {
+//                carView.focus();
+//                focusable = carView;
+//            }
         }
 
         for (EditorCollisionView collision : arenaView.getCollisions()) {

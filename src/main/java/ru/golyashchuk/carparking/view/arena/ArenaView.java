@@ -11,59 +11,42 @@ import ru.golyashchuk.carparking.view.Renderer;
 import ru.golyashchuk.carparking.view.View;
 import ru.golyashchuk.carparking.view.car.CarView;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class ArenaView implements Renderer, View {
-    private Arena arena;
     private Pane view;
     private ArenaBoundsView arenaBounds;
-    private List<CarView> cars = new LinkedList<>();
+    private Map<Car, CarView> cars = new HashMap<>();
     private FinishView finish;
     private List<CollisionView> collisions = new LinkedList<>();
 
     public ArenaView(Arena arena) {
-        this.arena = arena;
         this.view = new Pane();
         view.setMaxWidth(arena.getWidth());
         view.setMaxHeight(arena.getHeight());
-        initializeBounds();
-        initializeFinish();
-        initializeCars();
-        initializeCollisions();
-    }
-
-    public void updateAllViews() {
-        updateCarViews();
-    }
-
-    private void updateCarViews() {
-        cars.clear();
-        initializeCars();
+        initializeBounds(arena);
+        initializeFinish(arena);
+        initializeCars(arena);
+        initializeCollisions(arena);
     }
 
     public void focusCar(Car car) {
-        for (CarView carView : cars) {
-            if (carView.getCar() == car) {
-                carView.focus();
-            }
-        }
+        CarView carView = cars.get(car);
+        carView.focus();
+        carView.renderCar(car);
     }
 
     public void unfocusCar(Car car) {
-        for (CarView carView : cars) {
-            if (carView.getCar() == car) {
-                carView.unfocus();
-            }
-        }
+        CarView carView = cars.get(car);
+        carView.unfocus();
+        carView.renderCar(car);
     }
 
     public void mainCar(Car car) {
-        for (CarView carView : cars) {
-            if (carView.getCar() == car) {
-                carView.mainCar();
-            }
-        }
+
     }
 
     @Override
@@ -86,24 +69,24 @@ public class ArenaView implements Renderer, View {
     }
 
 
-    private void initializeBounds() {
+    private void initializeBounds(Arena arena) {
         int w = arena.getWidth();
         int h = arena.getHeight();
         this.arenaBounds = new ArenaBoundsView(new Rectangle(w, h));
         this.view.getChildren().add(arenaBounds.getView());
     }
 
-    private void initializeFinish() {
+    private void initializeFinish(Arena arena) {
         if (arena.getFinish() != null) {
             this.finish = new FinishView(arena.getFinish());
             this.view.getChildren().add(finish.getView());
         }
     }
 
-    private void initializeCars() {
+    private void initializeCars(Arena arena) {
         for (Car car : arena.getCars()) {
             CarView carView = CarEnum.GRAYCAR.getCarModel(car);
-            cars.add(carView);
+            cars.put(car, carView);
             this.view.getChildren().add(carView.getView());
         }
     }
@@ -112,7 +95,7 @@ public class ArenaView implements Renderer, View {
         cars.remove(carView);
     }
 
-    private void initializeCollisions() {
+    private void initializeCollisions(Arena arena) {
         if (arena.getCollisions() == null) {
             return;
         }
@@ -127,8 +110,8 @@ public class ArenaView implements Renderer, View {
     }
 
     private void renderCars() {
-        for (CarView carView : cars) {
-            carView.render();
+        for (Car car : cars.keySet()) {
+            cars.get(car).renderCar(car);
         }
     }
 

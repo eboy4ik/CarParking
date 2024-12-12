@@ -6,12 +6,11 @@ import ru.golyashchuk.carparking.view.Renderer;
 import ru.golyashchuk.carparking.view.View;
 
 public class FinishView implements Renderer, View {
-    private final Rectangle model;
     private Rectangle view;
 
     public FinishView(Rectangle model) {
-        this.model = model;
-        initializeView();
+        view = new Rectangle(model.getX(), model.getY(), model.getWidth(), model.getHeight());
+        view.setFill(Color.rgb(0, 150, 0, 0.5));
     }
 
     @Override
@@ -21,11 +20,7 @@ public class FinishView implements Renderer, View {
 
     @Override
     public void render() {
-        initializeView();
+//        initializeView();
     }
 
-    private void initializeView() {
-        view = new Rectangle(model.getX(), model.getY(), model.getWidth(), model.getHeight());
-        view.setFill(Color.rgb(0, 150, 0, 0.5));
-    }
 }

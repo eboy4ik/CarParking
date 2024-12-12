@@ -16,7 +16,7 @@ import ru.golyashchuk.carparking.view.arena.Focusable;
 public class CarView implements Renderer, View, Focusable {
     public final static int OUTLINE_WIDTH = 2;
     public final static int OUTLINE_OFFSET = 10;
-    private final Car car;
+    //    private final Car car;
     private Rectangle outline;
     private Rectangle bounds;
     private Group view;
@@ -28,19 +28,13 @@ public class CarView implements Renderer, View, Focusable {
 
 
     public CarView(Car car) {
-        this.car = car;
-        initializeOutline();
-
+        initializeOutline(car);
         bounds = ShapeHandler.copyRectangle(car.getBounds());
         bounds.setX(0);
         bounds.setY(0);
         bounds.setFill(Color.BLUE);
     }
 
-
-    public Car getCar() {
-        return car;
-    }
 
     public void rebuild() {
         this.view = new Group();
@@ -105,12 +99,18 @@ public class CarView implements Renderer, View, Focusable {
 
     @Override
     public void render() {
+//        turn(Math.toDegrees(car.getWheelsOrientation()));
+//        rotate(Math.toDegrees(car.getCarOrientation()));
+//        setPosition(car.getX(), car.getY());
+    }
+
+    public void renderCar(Car car) {
         turn(Math.toDegrees(car.getWheelsOrientation()));
         rotate(Math.toDegrees(car.getCarOrientation()));
         setPosition(car.getX(), car.getY());
     }
 
-    private void initializeOutline() {
+    private void initializeOutline(Car car) {
         outline = new Rectangle(car.getBounds().getWidth() + OUTLINE_OFFSET * 2, car.getBounds().getHeight() + OUTLINE_OFFSET * 2);
         outline.setArcWidth(50);
         outline.setArcHeight(50);

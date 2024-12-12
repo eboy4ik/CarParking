@@ -40,7 +40,7 @@ public class LevelEditorController implements Controller {
         pane.setCenter(arenaEditorView.getView());
 
         editor.getArenaView().getView().setOnMouseClicked(this::onMouseClicked);
-
+        editor.getArenaView().getView().setOnMouseDragged(this::onMouseDragged);
 
         pane.setOnKeyPressed(this::onKeyPressed);
         Scene scene = new Scene(pane, SettingsConfiguration.getWindowWidth(), SettingsConfiguration.getWindowHeight());
@@ -48,6 +48,10 @@ public class LevelEditorController implements Controller {
         primaryStage.show();
 
         pane.requestFocus();
+    }
+
+    private void onMouseDragged(MouseEvent mouseEvent) {
+        editor.getFocusable();
     }
 
 
@@ -59,6 +63,7 @@ public class LevelEditorController implements Controller {
 
         editor.addObject(mouseEvent.getX(), mouseEvent.getY());
     }
+
 
     private void onKeyPressed(KeyEvent keyEvent) {
         if (keyEvent.getCode() == KeyCode.ESCAPE) {
