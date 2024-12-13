@@ -1,6 +1,7 @@
 package ru.golyashchuk.carparking.models.arena;
 
 import javafx.scene.shape.Rectangle;
+import ru.golyashchuk.carparking.models.Model;
 import ru.golyashchuk.carparking.models.car.Car;
 import ru.golyashchuk.carparking.models.car.Collisional;
 import ru.golyashchuk.carparking.utils.collision.CollisionHandler;
@@ -8,7 +9,7 @@ import ru.golyashchuk.carparking.utils.collision.CollisionHandler;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Arena {
+public class Arena implements Model {
     private int width;
     private int height;
 

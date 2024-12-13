@@ -2,6 +2,7 @@ package ru.golyashchuk.carparking.view.arena;
 
 import javafx.scene.Node;
 import javafx.scene.shape.Rectangle;
+import ru.golyashchuk.carparking.models.Model;
 import ru.golyashchuk.carparking.view.Renderer;
 import ru.golyashchuk.carparking.view.View;
 
@@ -18,7 +19,7 @@ public class CollisionView implements Renderer, View {
     }
 
     @Override
-    public void render() {
+    public void render(Model model) {
 
     }
 

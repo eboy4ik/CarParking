@@ -2,6 +2,7 @@ package ru.golyashchuk.carparking.view.arena;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import ru.golyashchuk.carparking.models.Model;
 import ru.golyashchuk.carparking.view.Renderer;
 import ru.golyashchuk.carparking.view.View;
 
@@ -19,8 +20,10 @@ public class FinishView implements Renderer, View {
     }
 
     @Override
-    public void render() {
-//        initializeView();
+    public void render(Model model) {
+        Rectangle rect = (Rectangle) model;
+        view = new Rectangle(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+        view.setFill(Color.rgb(0, 150, 0, 0.5));
     }
 
 }

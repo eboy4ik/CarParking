@@ -5,6 +5,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import ru.golyashchuk.carparking.models.Collision;
+import ru.golyashchuk.carparking.models.Model;
 import ru.golyashchuk.carparking.models.arena.Arena;
 import ru.golyashchuk.carparking.models.car.Car;
 import ru.golyashchuk.carparking.models.car.Collisional;
@@ -17,7 +18,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class EditorArenaView implements Renderer, View {
-    private Arena arena;
     private Pane view;
     private EditorArenaBoundsView bounds;
     private FinishView finish;
@@ -25,8 +25,7 @@ public class EditorArenaView implements Renderer, View {
     private List<EditorCollisionView> collisions = new LinkedList<>();
 
     public EditorArenaView(Arena arena) {
-        this.arena = arena;
-        initialize();
+        initialize(arena);
     }
 
     public void setFinish(Rectangle finish) {
@@ -37,7 +36,7 @@ public class EditorArenaView implements Renderer, View {
         view.getChildren().add(this.finish.getView());
     }
 
-    private void initialize() {
+    private void initialize(Arena arena) {
         this.view = new Pane();
         bounds = new EditorArenaBoundsView(new Rectangle(arena.getWidth(), arena.getHeight()));
 
@@ -69,27 +68,21 @@ public class EditorArenaView implements Renderer, View {
     }
 
     @Override
-    public void render() {
-        bounds.render();
+    public void render(Model model) {
+        bounds.render(model);
     }
 
     public void addCar(Car car) {
         CarView carView = CarEnum.GRAYCAR.getCarModel(car);
         cars.add(carView);
         this.view.getChildren().add(carView.getView());
-        carView.render();
+        carView.renderCar(car);
     }
 
     public void addCollision(Collision collisional) {
         EditorCollisionView collisionView = new EditorCollisionView(collisional);
         collisions.add(collisionView);
         this.view.getChildren().add(collisionView.getView());
-        collisionView.render();
-    }
-
-    private void initializeCars() {
-        for (Car car : arena.getCars()) {
-            addCar(car);
-        }
+        collisionView.render(collisional);
     }
 }

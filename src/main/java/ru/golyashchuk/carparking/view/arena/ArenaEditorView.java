@@ -1,25 +1,38 @@
 package ru.golyashchuk.carparking.view.arena;
 
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.shape.Rectangle;
 import ru.golyashchuk.carparking.models.ModelType;
 import ru.golyashchuk.carparking.models.arena.Arena;
-import ru.golyashchuk.carparking.models.arena.ArenaEditor;
-import ru.golyashchuk.carparking.models.car.Car;
 import ru.golyashchuk.carparking.view.View;
 
 public class ArenaEditorView implements View {
     private BorderPane view;
-    private final ArenaEditor editor;
+    private ModelType selectedModel;
+    private EditorArenaView arenaView;
+    private Focusable focusable;
 
-    public ArenaEditorView(ArenaEditor editor) {
-        this.editor = editor;
+    public ArenaEditorView(Arena arena) {
+        arenaView = new EditorArenaView(arena);
         initialize();
+    }
+
+    public ModelType getSelectedModel() {
+        return selectedModel;
+    }
+
+    public EditorArenaView getArenaView() {
+        return arenaView;
+    }
+
+    public Focusable getFocusable() {
+        return focusable;
+    }
+
+    public void setFocusable(Focusable focusable) {
+        this.focusable = focusable;
     }
 
     @Override
@@ -29,24 +42,29 @@ public class ArenaEditorView implements View {
 
     private void initialize() {
         view = new BorderPane();
-        view.setCenter(editor.getArenaView().getView());
+        view.setCenter(arenaView.getView());
 
         FlowPane flowPane = new FlowPane();
         flowPane.setAlignment(Pos.CENTER);
         view.setTop(flowPane);
 
         Button noneButton = new Button("None");
-        noneButton.setOnAction(event -> editor.setSelectedModel(null));
+        noneButton.setOnAction(event -> setSelectedModel(null));
 
         Button carButton = new Button("Car");
-        carButton.setOnAction(event -> editor.setSelectedModel(ModelType.CAR));
+        carButton.setOnAction(event -> setSelectedModel(ModelType.CAR));
 
         Button finishButton = new Button("Finish");
-        finishButton.setOnAction(event -> editor.setSelectedModel(ModelType.FINISH));
+        finishButton.setOnAction(event -> setSelectedModel(ModelType.FINISH));
         Button collisionButton = new Button("Collisional");
-        collisionButton.setOnAction(event -> editor.setSelectedModel(ModelType.COLLISION));
+        collisionButton.setOnAction(event -> setSelectedModel(ModelType.COLLISION));
 
         flowPane.getChildren().addAll(noneButton, carButton, finishButton, collisionButton);
     }
+
+    public void setSelectedModel(ModelType selectedModel) {
+        this.selectedModel = selectedModel;
+    }
+
 
 }

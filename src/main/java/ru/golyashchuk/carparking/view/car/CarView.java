@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import ru.golyashchuk.carparking.models.Model;
 import ru.golyashchuk.carparking.models.car.Car;
 import ru.golyashchuk.carparking.utils.ShapeHandler;
 import ru.golyashchuk.carparking.view.Renderer;
@@ -98,10 +99,14 @@ public class CarView implements Renderer, View, Focusable {
     }
 
     @Override
-    public void render() {
-//        turn(Math.toDegrees(car.getWheelsOrientation()));
-//        rotate(Math.toDegrees(car.getCarOrientation()));
-//        setPosition(car.getX(), car.getY());
+    public void render(Model model) {
+        if (!(model instanceof Car)) {
+            throw new IllegalArgumentException("model isn't Car");
+        }
+        Car car = (Car) model;
+        turn(Math.toDegrees(car.getWheelsOrientation()));
+        rotate(Math.toDegrees(car.getCarOrientation()));
+        setPosition(car.getX(), car.getY());
     }
 
     public void renderCar(Car car) {
@@ -119,4 +124,6 @@ public class CarView implements Renderer, View, Focusable {
         outline.setStrokeWidth(OUTLINE_WIDTH);
         outline.setFill(Color.TRANSPARENT);
     }
+
+
 }

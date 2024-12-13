@@ -1,27 +1,19 @@
 package ru.golyashchuk.carparking.view.arena;
 
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import ru.golyashchuk.carparking.models.Collision;
+import ru.golyashchuk.carparking.models.Model;
 import ru.golyashchuk.carparking.shape.ResizableRectangle;
 import ru.golyashchuk.carparking.view.Renderer;
 import ru.golyashchuk.carparking.view.View;
 
 public class EditorCollisionView implements Renderer, View, Focusable {
-    private Collision model;
     private ResizableRectangle view;
 
     public EditorCollisionView(Collision model) {
-        this.model = model;
         view = new ResizableRectangle(model.getCollision().getWidth(), model.getCollision().getHeight());
-        render();
-    }
-
-    public Collision getModel() {
-        return model;
-    }
-
-    public void setModel(Collision model) {
-        this.model = model;
+        render(model);
     }
 
     public void setView(ResizableRectangle view) {
@@ -34,9 +26,10 @@ public class EditorCollisionView implements Renderer, View, Focusable {
     }
 
     @Override
-    public void render() {
-        view.setX(model.getCollision().getX());
-        view.setY(model.getCollision().getY());
+    public void render(Model model) {
+        Collision collision = (Collision) model;
+        view.setX(collision.getCollision().getX());
+        view.setY(collision.getCollision().getY());
     }
 
     @Override
@@ -47,6 +40,5 @@ public class EditorCollisionView implements Renderer, View, Focusable {
     @Override
     public void focus() {
         view.getRectangle().setStroke(Color.RED);
-        System.out.println("AGA 2");
     }
 }

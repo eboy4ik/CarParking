@@ -21,6 +21,7 @@ public class ArenaController {
     private final ArenaView arenaView;
 
     private final Set<KeyCode> pressedKeys = new HashSet<>();
+    private final AnimationTimer timer;
 
     public ArenaView getArenaView() {
         return arenaView;
@@ -34,8 +35,9 @@ public class ArenaController {
         arenaView.getView().setOnKeyPressed(this::onKeyPressed);
         arenaView.getView().setOnKeyReleased(this::onKeyReleased);
 
+        arenaView.render(arena);
         final LongProperty lastUpdateTime = new SimpleLongProperty();
-        AnimationTimer timer = new AnimationTimer() {
+        timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
 
@@ -43,13 +45,15 @@ public class ArenaController {
                 if (checkWin()) {
                     System.out.println("WIIIN");
                 }
-                updateFocusedCar(elapsedSeconds);
-                arenaView.render();
+                updateFocusedCarState(elapsedSeconds);
+                moveCars(elapsedSeconds);
+                arenaView.renderCars(arena.getCars());
                 lastUpdateTime.set(now);
             }
         };
         timer.start();
     }
+
 
     public void focusCar(double x, double y) {
         Point2D point = new Point2D(x, y);
@@ -66,7 +70,27 @@ public class ArenaController {
         arenaView.focusCar(car);
     }
 
-    public void moveFocusCar(Set<Direction> direction, double t) {
+    private void updateFocusedCarState(double time) {
+        HashSet<Direction> directions = new HashSet<>();
+        if (pressedKeys.contains(KeyCode.W)) {
+            directions.add(Direction.FORWARD);
+        }
+        if (pressedKeys.contains(KeyCode.S)) {
+            directions.add(Direction.BACK);
+        }
+        if (pressedKeys.contains(KeyCode.A)) {
+            directions.add(Direction.LEFT);
+        }
+        if (pressedKeys.contains(KeyCode.D)) {
+            directions.add(Direction.RIGHT);
+        }
+        if (pressedKeys.contains(KeyCode.SPACE)) {
+            directions.add(Direction.BRAKE);
+        }
+        setDirectionsFocusCar(directions, time);
+    }
+
+    private void setDirectionsFocusCar(Set<Direction> direction, double t) {
         Car focusedCar = arena.getFocusedCar();
         focusedCar.straightWheels();
         if (direction.contains(Direction.LEFT)) {
@@ -89,13 +113,20 @@ public class ArenaController {
         if (!direction.contains(Direction.FORWARD) && !direction.contains(Direction.BACK)) {
             focusedCar.slowly(t);
         }
+    }
 
-        if (willCollisionWithOther(focusedCar, t) || willBehindArena(focusedCar, t)) {
-            focusedCar.stop();
-            return;
+    private void moveCars(double time) {
+        for (Car car : arena.getCars()) {
+            if (willCollisionWithOther(car, time) || willBehindArena(car, time)) {
+                car.stop();
+            } else {
+                car.move(time);
+            }
+
+            if (car != arena.getFocusedCar()) {
+                car.slowly(time);
+            }
         }
-
-        focusedCar.move(t);
     }
 
     private boolean willBehindArena(Car focusedCar, double time) {
@@ -131,23 +162,7 @@ public class ArenaController {
         pressedKeys.remove(event.getCode());
     }
 
-    private void updateFocusedCar(double time) {
-        HashSet<Direction> directions = new HashSet<>();
-        if (pressedKeys.contains(KeyCode.W)) {
-            directions.add(Direction.FORWARD);
-        }
-        if (pressedKeys.contains(KeyCode.S)) {
-            directions.add(Direction.BACK);
-        }
-        if (pressedKeys.contains(KeyCode.A)) {
-            directions.add(Direction.LEFT);
-        }
-        if (pressedKeys.contains(KeyCode.D)) {
-            directions.add(Direction.RIGHT);
-        }
-        if (pressedKeys.contains(KeyCode.SPACE)) {
-            directions.add(Direction.BRAKE);
-        }
-        moveFocusCar(directions, time);
+    public void stopGame() {
+        timer.stop();
     }
 }

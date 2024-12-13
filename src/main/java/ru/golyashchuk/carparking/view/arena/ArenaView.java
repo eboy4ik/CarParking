@@ -3,6 +3,7 @@ package ru.golyashchuk.carparking.view.arena;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import ru.golyashchuk.carparking.models.Model;
 import ru.golyashchuk.carparking.models.arena.Arena;
 import ru.golyashchuk.carparking.models.car.Car;
 import ru.golyashchuk.carparking.models.car.Collisional;
@@ -55,17 +56,25 @@ public class ArenaView implements Renderer, View {
     }
 
     @Override
-    public void render() {
-        renderAll();
-    }
-
-    public void renderAll() {
+    public void render(Model model) {
+        Arena arena = (Arena) model;
         renderArenaBounds();
-        renderCars();
+
+        renderCars(arena.getCars());
         if (finish != null) {
-            finish.render();
+//            finish.render();
         }
         renderCollisions();
+    }
+
+    private void renderArenaBounds() {
+
+    }
+
+    public void renderCars(List<Car> cars) {
+        for (Car car : cars) {
+            this.cars.get(car).renderCar(car);
+        }
     }
 
 
@@ -105,19 +114,10 @@ public class ArenaView implements Renderer, View {
         }
     }
 
-    private void renderArenaBounds() {
-
-    }
-
-    private void renderCars() {
-        for (Car car : cars.keySet()) {
-            cars.get(car).renderCar(car);
-        }
-    }
 
     private void renderCollisions() {
         for (CollisionView collisionView : collisions) {
-            collisionView.render();
+//            collisionView.render();
         }
     }
 

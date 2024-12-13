@@ -15,6 +15,7 @@ import java.util.Optional;
 public class GameController implements Controller {
     private Stage primaryStage;
     private BorderPane gamePane;
+    private ArenaController arenaController;
 
     public GameController(Stage primaryStage) {
         initializeScene(primaryStage);
@@ -25,7 +26,7 @@ public class GameController implements Controller {
         this.primaryStage = stage;
         gamePane = new BorderPane();
 
-        ArenaController arenaController = new ArenaController(new ArenaLevel1());
+        arenaController = new ArenaController(new ArenaLevel1());
 
         gamePane.setCenter(arenaController.getArenaView().getView());
 
@@ -42,6 +43,7 @@ public class GameController implements Controller {
             ExitConfirmationAlert alert = new ExitConfirmationAlert();
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
+                arenaController.stopGame();
                 new MenuController(primaryStage);
             }
         }

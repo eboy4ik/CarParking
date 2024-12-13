@@ -3,6 +3,7 @@ package ru.golyashchuk.carparking.view.arena;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import ru.golyashchuk.carparking.models.Model;
 import ru.golyashchuk.carparking.view.Renderer;
 import ru.golyashchuk.carparking.view.View;
 
@@ -19,9 +20,10 @@ public class ArenaBoundsView implements Renderer, View {
     }
 
     @Override
-    public void render() {
-//        initializeWall(model);
-//        initializeFreeArea(model);
+    public void render(Model model) {
+        Rectangle rect = (Rectangle) model;
+        initializeWall(rect);
+        initializeFreeArea(rect);
         rebuild();
     }
 
