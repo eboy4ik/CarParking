@@ -5,7 +5,9 @@ import javafx.geometry.Point2D;
 import ru.golyashchuk.carparking.utils.Beam;
 import ru.golyashchuk.carparking.utils.RectCoordinateSystem;
 
-public class MathCar {
+import java.io.Serializable;
+
+public class MathCar implements Serializable {
     public static final MathCarBuilder DEFAULT_MATHCAR_BUILDER = new MathCarBuilder() {
         {
             axleBase(60).distanceWheels(35);

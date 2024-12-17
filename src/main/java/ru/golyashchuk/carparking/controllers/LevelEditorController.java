@@ -1,6 +1,5 @@
 package ru.golyashchuk.carparking.controllers;
 
-import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyCode;
@@ -8,26 +7,27 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ru.golyashchuk.carparking.config.SettingsConfiguration;
 import ru.golyashchuk.carparking.models.Collision;
 import ru.golyashchuk.carparking.models.ModelType;
 import ru.golyashchuk.carparking.models.arena.Arena;
 import ru.golyashchuk.carparking.models.car.Car;
-import ru.golyashchuk.carparking.shape.ResizableRectangle;
+import ru.golyashchuk.carparking.utils.Serializator;
 import ru.golyashchuk.carparking.utils.ShapeHandler;
 import ru.golyashchuk.carparking.view.alert.ExitConfirmationAlert;
 import ru.golyashchuk.carparking.view.arena.ArenaEditorView;
-import ru.golyashchuk.carparking.view.arena.ArenaView;
 import ru.golyashchuk.carparking.view.arena.EditorCollisionView;
-import ru.golyashchuk.carparking.view.car.CarView;
 
+import java.io.*;
 import java.util.Optional;
 
 public class LevelEditorController implements Controller {
+    public static String ARENA_DIR_PATH = "/src/main/resources/levels";
     private Stage primaryStage;
     private Arena arena;
     private ArenaEditorView editorView;
+    private BorderPane pane;
 
     public LevelEditorController(Stage primaryStage) {
         initializeScene(primaryStage);
@@ -36,23 +36,36 @@ public class LevelEditorController implements Controller {
     @Override
     public void initializeScene(Stage stage) {
         this.primaryStage = stage;
-        BorderPane pane = new BorderPane();
+        pane = new BorderPane();
 
-        arena = new Arena();
-        arena.setWidth(500);
-        arena.setHeight(500);
-        editorView = new ArenaEditorView(arena);
-        pane.setCenter(editorView.getView());
-
-        editorView.getArenaView().getView().setOnMouseClicked(this::onMouseClicked);
-        editorView.getArenaView().getView().setOnMouseDragged(this::onMouseDragged);
+        initializeArena();
+        initializeEditorView();
 
         pane.setOnKeyPressed(this::onKeyPressed);
-        Scene scene = new Scene(pane, SettingsConfiguration.getWindowWidth(), SettingsConfiguration.getWindowHeight());
+        Scene scene = new Scene(pane, stage.getScene().getWidth(), stage.getScene().getHeight());
         primaryStage.setScene(scene);
         primaryStage.show();
 
         pane.requestFocus();
+    }
+
+    private void initializeArena() {
+        arena = new Arena();
+        arena.setWidth(500);
+        arena.setHeight(500);
+    }
+
+    private void initializeEditorView() {
+        editorView = new ArenaEditorView(arena);
+
+        editorView.getArenaView().getView().setOnMouseClicked(this::onMouseClicked);
+        editorView.getArenaView().getView().setOnMouseDragged(this::onMouseDragged);
+
+        editorView.getSaveArenaButton().setOnAction(event -> saveArena());
+        editorView.getLoadArenaButton().setOnAction(event -> loadArena());
+        editorView.getClearArenaButton().setOnAction(event -> clearArena());
+
+        pane.setCenter(editorView.getView());
     }
 
     private void onMouseDragged(MouseEvent mouseEvent) {
@@ -81,14 +94,18 @@ public class LevelEditorController implements Controller {
         }
 
         if (keyEvent.getCode() == KeyCode.DELETE) {
-            if (editorView.getFocusable() == null) {
-                return;
-            }
+//            switch (editorView.getFocusable()) {
+//                case ModelType.CAR:
+//
+//            }
 
         }
     }
 
     public void addCar(Car car) {
+        if (arena.getCars().isEmpty()) {
+            arena.setMainCar(car);
+        }
         arena.addCar(car);
         editorView.getArenaView().addCar(car);
     }
@@ -99,7 +116,7 @@ public class LevelEditorController implements Controller {
     }
 
     public void addCollision(Collision collision) {
-        arena.addCollisional(collision);
+        arena.addCollision(collision);
         editorView.getArenaView().addCollision(collision);
     }
 
@@ -125,17 +142,21 @@ public class LevelEditorController implements Controller {
     public void focus(double x, double y) {
         unfocus();
 
-//        for (CarView carView : arena.getCars()) {
-//            if (carView.getCar().getBounds().contains(x, y)) {
-//                carView.focus();
-//                focusable = carView;
-//            }
-//        }
+        if (arena.getFinish() != null && arena.getFinish().getBoundsInParent().contains(x, y)) {
+            editorView.focus(arena.getFinish());
+            return;
+        }
 
-        for (EditorCollisionView collision : editorView.getArenaView().getCollisions()) {
-            if (collision.getView().getRectangle().contains(x, y)) {
-                collision.focus();
-                editorView.setFocusable(collision);
+        for (Collision collision : arena.getCollisions()) {
+            if (collision.getCollision().getBoundsInParent().contains(x, y)) {
+                editorView.focus(collision);
+                return;
+            }
+        }
+
+        for (Car car : arena.getCars()) {
+            if (car.getCollision().getBoundsInParent().contains(x, y)) {
+                editorView.focus(car);
                 return;
             }
         }
@@ -143,9 +164,55 @@ public class LevelEditorController implements Controller {
 
     private void unfocus() {
         if (editorView.getFocusable() != null) {
-            editorView.getFocusable().unfocus();
+            editorView.unfocus();
             editorView.setFocusable(null);
         }
     }
+
+    private void saveArena() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Сохраните файл");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("SER files (*.ser)", "*.ser");
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir") + ARENA_DIR_PATH));
+        fileChooser.setInitialFileName("newarena.ser");
+        fileChooser.getExtensionFilters().add(extFilter);
+        File fileToSave = fileChooser.showSaveDialog(primaryStage);
+        if (fileToSave == null) {
+            return;
+        }
+
+        try {
+            Serializator.serializeArena(arena, fileToSave);
+        } catch (IOException i) {
+            i.printStackTrace();
+        }
+    }
+
+    private void loadArena() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Выберите файл для загрузки");
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir") + ARENA_DIR_PATH));
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("SER files (*.ser)", "*.ser");
+        fileChooser.getExtensionFilters().add(extFilter);
+        File selectedFile = fileChooser.showOpenDialog(primaryStage);
+
+        if (selectedFile == null) {
+            return;
+        }
+
+        try {
+            arena = Serializator.deserializeArena(selectedFile);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        initializeEditorView();
+    }
+
+    private void clearArena() {
+        initializeArena();
+        initializeEditorView();
+    }
+
 
 }

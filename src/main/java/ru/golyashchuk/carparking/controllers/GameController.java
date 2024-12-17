@@ -6,6 +6,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import ru.golyashchuk.carparking.models.arena.Arena;
 import ru.golyashchuk.carparking.models.arena.ArenaController;
 import ru.golyashchuk.carparking.models.arena.ArenaLevel1;
 import ru.golyashchuk.carparking.view.alert.ExitConfirmationAlert;
@@ -18,6 +19,12 @@ public class GameController implements Controller {
     private ArenaController arenaController;
 
     public GameController(Stage primaryStage) {
+        arenaController = new ArenaController(new ArenaLevel1());
+        initializeScene(primaryStage);
+    }
+
+    public GameController(Arena arena, Stage primaryStage) {
+        arenaController = new ArenaController(arena);
         initializeScene(primaryStage);
     }
 
@@ -25,8 +32,6 @@ public class GameController implements Controller {
     public void initializeScene(Stage stage) {
         this.primaryStage = stage;
         gamePane = new BorderPane();
-
-        arenaController = new ArenaController(new ArenaLevel1());
 
         gamePane.setCenter(arenaController.getArenaView().getView());
 

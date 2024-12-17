@@ -1,6 +1,5 @@
 package ru.golyashchuk.carparking.view.arena;
 
-import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -8,21 +7,21 @@ import ru.golyashchuk.carparking.models.Collision;
 import ru.golyashchuk.carparking.models.Model;
 import ru.golyashchuk.carparking.models.arena.Arena;
 import ru.golyashchuk.carparking.models.car.Car;
-import ru.golyashchuk.carparking.models.car.Collisional;
 import ru.golyashchuk.carparking.view.Renderer;
 import ru.golyashchuk.carparking.view.View;
 import ru.golyashchuk.carparking.view.car.CarEnum;
 import ru.golyashchuk.carparking.view.car.CarView;
 
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EditorArenaView implements Renderer, View {
     private Pane view;
     private EditorArenaBoundsView bounds;
     private FinishView finish;
-    private List<CarView> cars = new LinkedList<>();
-    private List<EditorCollisionView> collisions = new LinkedList<>();
+    private Map<Car, CarView> cars = new HashMap<>();
+    private Map<Collision, EditorCollisionView> collisions = new HashMap<>();
 
     public EditorArenaView(Arena arena) {
         initialize(arena);
@@ -38,12 +37,45 @@ public class EditorArenaView implements Renderer, View {
 
     private void initialize(Arena arena) {
         this.view = new Pane();
-        bounds = new EditorArenaBoundsView(new Rectangle(arena.getWidth(), arena.getHeight()));
+        initializeBounds(arena.getWidth(), arena.getHeight());
+        initializeCars(arena.getCars());
+        initializeCollisions(arena.getCollisions());
+        if (arena.getFinish() != null) {
+            initializeFinish(arena.getFinish());
+        }
 
+    }
+
+    private void initializeBounds(int width, int height) {
+        bounds = new EditorArenaBoundsView(new Rectangle(width, height));
         view.maxWidthProperty().bind(bounds.getView().getRectangle().widthProperty());
         view.maxHeightProperty().bind(bounds.getView().getRectangle().heightProperty());
         bounds.getView().getRectangle().setFill(Color.TRANSPARENT);
-        view.getChildren().addAll(bounds.getView());
+        view.getChildren().add(bounds.getView());
+    }
+
+    private void initializeFinish(Rectangle finish) {
+        setFinish(finish);
+    }
+
+    private void initializeCollisions(List<Collision> collisions) {
+        for (Collision collision : collisions) {
+            addCollision(collision);
+        }
+    }
+
+    private void initializeCars(List<Car> cars) {
+        for (Car car : cars) {
+            addCar(car);
+        }
+    }
+
+    public Map<Car, CarView> getCars() {
+        return cars;
+    }
+
+    public Map<Collision, EditorCollisionView> getCollisions() {
+        return collisions;
     }
 
     public EditorArenaBoundsView getBounds() {
@@ -54,13 +86,6 @@ public class EditorArenaView implements Renderer, View {
         return finish;
     }
 
-    public List<CarView> getCars() {
-        return cars;
-    }
-
-    public List<EditorCollisionView> getCollisions() {
-        return collisions;
-    }
 
     @Override
     public Pane getView() {
@@ -69,20 +94,30 @@ public class EditorArenaView implements Renderer, View {
 
     @Override
     public void render(Model model) {
-        bounds.render(model);
+        Arena arena = (Arena) model;
+
+        renderCars(arena.getCars());
+//        bounds.render();
+    }
+
+    private void renderCars(List<Car> cars) {
+        for (Car car : cars) {
+            this.cars.get(car).renderCar(car);
+        }
     }
 
     public void addCar(Car car) {
         CarView carView = CarEnum.GRAYCAR.getCarModel(car);
-        cars.add(carView);
+        cars.put(car, carView);
         this.view.getChildren().add(carView.getView());
         carView.renderCar(car);
     }
 
-    public void addCollision(Collision collisional) {
-        EditorCollisionView collisionView = new EditorCollisionView(collisional);
-        collisions.add(collisionView);
+    public void addCollision(Collision collision) {
+        EditorCollisionView collisionView = new EditorCollisionView(collision);
+        collisions.put(collision, collisionView);
         this.view.getChildren().add(collisionView.getView());
-        collisionView.render(collisional);
+        collisionView.render(collision);
     }
+
 }

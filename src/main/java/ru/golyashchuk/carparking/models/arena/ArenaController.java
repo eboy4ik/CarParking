@@ -8,6 +8,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
+import ru.golyashchuk.carparking.models.Collision;
 import ru.golyashchuk.carparking.models.car.Car;
 import ru.golyashchuk.carparking.models.car.Direction;
 import ru.golyashchuk.carparking.utils.collision.CollisionHandler;
@@ -29,11 +30,13 @@ public class ArenaController {
 
     public ArenaController(Arena arena) {
         this.arena = arena;
+        arena.setFocusedCar(arena.getMainCar());
         this.arenaView = new ArenaView(arena);
 
         arenaView.getView().setOnMouseClicked(this::onMouseClicked);
         arenaView.getView().setOnKeyPressed(this::onKeyPressed);
         arenaView.getView().setOnKeyReleased(this::onKeyReleased);
+
 
         arenaView.render(arena);
         final LongProperty lastUpdateTime = new SimpleLongProperty();
@@ -134,12 +137,18 @@ public class ArenaController {
         return !CollisionHandler.containsShape(arenaBounds, focusedCar.getFutureBounds(time));
     }
 
-    private boolean willCollisionWithOther(Car focusedCar, double time) {
+    private boolean willCollisionWithOther(Car currentCar, double time) {
         for (Car car : arena.getCars()) {
-            if (car != focusedCar && focusedCar.willCollision(car, time)) {
+            if (car != currentCar && currentCar.willCollision(car, time)) {
                 return true;
             }
         }
+        for (Collision collision : arena.getCollisions()) {
+            if (currentCar.willCollision(collision, time)) {
+                return true;
+            }
+        }
+
         return false;
     }
 

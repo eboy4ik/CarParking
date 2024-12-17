@@ -67,7 +67,8 @@ public class MenuController implements Controller {
     }
 
     private void startGame() throws IOException {
-        new GameController(primaryStage);
+//        new GameController(primaryStage);
+        new LevelChooserController(primaryStage);
     }
 
     private void openSettings() {

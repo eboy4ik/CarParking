@@ -1,22 +1,27 @@
 package ru.golyashchuk.carparking.models.arena;
 
 import javafx.scene.shape.Rectangle;
+import ru.golyashchuk.carparking.models.Collision;
 import ru.golyashchuk.carparking.models.Model;
 import ru.golyashchuk.carparking.models.car.Car;
-import ru.golyashchuk.carparking.models.car.Collisional;
+import ru.golyashchuk.carparking.utils.Serializator;
 import ru.golyashchuk.carparking.utils.collision.CollisionHandler;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Arena implements Model {
+public class Arena implements Serializable, Model {
     private int width;
     private int height;
 
     private Car mainCar;
-    private Rectangle finish;
+    private transient Rectangle finish;
     private List<Car> cars = new LinkedList<>();
-    private List<Collisional> collisions = new LinkedList<>();
+    private List<Collision> collisions = new LinkedList<>();
 
     private Car focusedCar;
 
@@ -59,11 +64,11 @@ public class Arena implements Model {
         this.cars = cars;
     }
 
-    public List<Collisional> getCollisions() {
+    public List<Collision> getCollisions() {
         return collisions;
     }
 
-    public void setCollisions(List<Collisional> collisions) {
+    public void setCollisions(List<Collision> collisions) {
         this.collisions = collisions;
     }
 
@@ -77,7 +82,7 @@ public class Arena implements Model {
         }
     }
 
-    public void addCollisional(Collisional obj) {
+    public void addCollision(Collision obj) {
         collisions.add(obj);
     }
 
@@ -91,5 +96,15 @@ public class Arena implements Model {
 
     public void setFinish(Rectangle finish) {
         this.finish = finish;
+    }
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        oos.defaultWriteObject();
+        Serializator.serializeRectangle(finish, oos);
+    }
+
+    private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        ois.defaultReadObject();
+        finish = Serializator.deserializeRectangle(ois);
     }
 }

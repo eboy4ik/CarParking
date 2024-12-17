@@ -3,6 +3,7 @@ package ru.golyashchuk.carparking.view.arena;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import ru.golyashchuk.carparking.models.Collision;
 import ru.golyashchuk.carparking.models.Model;
 import ru.golyashchuk.carparking.models.arena.Arena;
 import ru.golyashchuk.carparking.models.car.Car;
@@ -77,7 +78,6 @@ public class ArenaView implements Renderer, View {
         }
     }
 
-
     private void initializeBounds(Arena arena) {
         int w = arena.getWidth();
         int h = arena.getHeight();
@@ -109,9 +109,15 @@ public class ArenaView implements Renderer, View {
             return;
         }
 
-        for (Collisional collision : arena.getCollisions()) {
-            collisions.add(new CollisionView(collision.getCollision()));
+        for (Collision collision : arena.getCollisions()) {
+            addCollision(collision);
         }
+    }
+
+    private void addCollision(Collision collision) {
+        CollisionView collisionView = new CollisionView(collision.getCollision());
+        collisions.add(collisionView);
+        this.view.getChildren().add(collisionView.getView());
     }
 
 

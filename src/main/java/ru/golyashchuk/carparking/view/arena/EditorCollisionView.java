@@ -1,9 +1,8 @@
 package ru.golyashchuk.carparking.view.arena;
 
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import ru.golyashchuk.carparking.models.Collision;
 import ru.golyashchuk.carparking.models.Model;
+import ru.golyashchuk.carparking.models.car.Collisional;
 import ru.golyashchuk.carparking.shape.ResizableRectangle;
 import ru.golyashchuk.carparking.view.Renderer;
 import ru.golyashchuk.carparking.view.View;
@@ -11,7 +10,7 @@ import ru.golyashchuk.carparking.view.View;
 public class EditorCollisionView implements Renderer, View, Focusable {
     private ResizableRectangle view;
 
-    public EditorCollisionView(Collision model) {
+    public EditorCollisionView(Collisional model) {
         view = new ResizableRectangle(model.getCollision().getWidth(), model.getCollision().getHeight());
         render(model);
     }
@@ -27,9 +26,9 @@ public class EditorCollisionView implements Renderer, View, Focusable {
 
     @Override
     public void render(Model model) {
-        Collision collision = (Collision) model;
-        view.setX(collision.getCollision().getX());
-        view.setY(collision.getCollision().getY());
+        Collisional collisional = (Collisional) model;
+        view.setX(collisional.getCollision().getX());
+        view.setY(collisional.getCollision().getY());
     }
 
     @Override

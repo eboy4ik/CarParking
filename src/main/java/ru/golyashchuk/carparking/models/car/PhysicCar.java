@@ -5,15 +5,20 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import ru.golyashchuk.carparking.utils.Beam;
+import ru.golyashchuk.carparking.utils.Serializator;
 import ru.golyashchuk.carparking.utils.ShapeHandler;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 
-public class PhysicCar extends MathCar implements Collisional {
+public class PhysicCar extends MathCar implements Serializable, Collisional {
     public static PhysicCar DEFAULT_PHYSICCAR = new PhysicCar(100, 40, MathCar.DEFAULT_MATHCAR_BUILDER);
-//    private double offsetBody = -100; // regarding center of the car
-    private Rectangle bounds;
-    private Rectangle futureBounds;
+    //    private double offsetBody = -100; // regarding center of the car
+    private transient Rectangle bounds;
+    private transient Rectangle futureBounds;
 
     public PhysicCar() {
         super(MathCar.DEFAULT_MATHCAR_BUILDER);
@@ -95,5 +100,17 @@ public class PhysicCar extends MathCar implements Collisional {
         rect.setRotate(Math.toDegrees(beam.getOrientation()));
         rect.setX(beam.getX());
         rect.setY(beam.getY());
+    }
+
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        oos.defaultWriteObject();
+        Serializator.serializeRectangle(bounds, oos);
+        Serializator.serializeRectangle(futureBounds, oos);
+    }
+
+    private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        ois.defaultReadObject();
+        bounds = Serializator.deserializeRectangle(ois);
+        futureBounds = Serializator.deserializeRectangle(ois);
     }
 }

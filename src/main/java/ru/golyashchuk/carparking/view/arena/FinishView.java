@@ -6,7 +6,7 @@ import ru.golyashchuk.carparking.models.Model;
 import ru.golyashchuk.carparking.view.Renderer;
 import ru.golyashchuk.carparking.view.View;
 
-public class FinishView implements Renderer, View {
+public class FinishView implements Renderer, Focusable, View {
     private Rectangle view;
 
     public FinishView(Rectangle model) {
@@ -26,4 +26,13 @@ public class FinishView implements Renderer, View {
         view.setFill(Color.rgb(0, 150, 0, 0.5));
     }
 
+    @Override
+    public void unfocus() {
+        view.setStroke(Color.TRANSPARENT);
+    }
+
+    @Override
+    public void focus() {
+        view.setStroke(Color.RED);
+    }
 }
