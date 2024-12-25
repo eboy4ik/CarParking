@@ -9,6 +9,8 @@ import ru.golyashchuk.carparking.view.car.CarView;
 import ru.golyashchuk.carparking.view.car.ICar;
 import ru.golyashchuk.carparking.view.car.Transmission;
 
+import java.awt.font.ImageGraphicAttribute;
+
 public enum CarEnum implements ICar {
     YELLOWCAR {
         @Override
@@ -44,9 +46,11 @@ public enum CarEnum implements ICar {
 //            Image carImage = new Image(ConfigurationManager.getProperty("path.car.yellowcar"));
             Image carImage = new Image(ConfigurationManager.getProperty("path.car.graycar.car"));
             Image focusedCarImage = new Image("cars/png/graycar/focusedcar.png");
+            Image mainCar = new Image(ConfigurationManager.getProperty("path.car.graycar.maincar"));
 
             carModel.setFocusedCar(focusedCarImage);
             carModel.setDefaultCar(carImage);
+            carModel.setMainCar(mainCar);
             ImageView body = new ImageView(carImage);
             double length = car.getBounds().getWidth();
             double width = car.getBounds().getHeight();

@@ -19,11 +19,10 @@ public class EditorArenaBoundsView implements Renderer, View {
     @Override
     public void render(Model model) {
         if (!(model instanceof Rectangle)) {
-            throw new IllegalArgumentException("model isn't Car");
+            throw new IllegalArgumentException("model isn't arena bounds");
         }
         view.setX(0);
         view.setY(0);
-//        view.setW
     }
 
     @Override
@@ -38,6 +37,11 @@ public class EditorArenaBoundsView implements Renderer, View {
         view.setSidesStrokeWidth(WALL_WIDTH);
         view.getRectangle().setFill(Color.WHITE);
         view.setSidesColor(Color.BLACK);
+        view.getUpperLeftCorner().setOnMouseDragged(null);
+        view.getBottomLeftCorner().setOnMouseDragged(null);
+        view.getUpperRightCorner().setOnMouseDragged(null);
+        view.getUpperSide().setOnMouseDragged(null);
+        view.getLeftSide().setOnMouseDragged(null);
     }
 
 }

@@ -7,7 +7,6 @@ import ru.golyashchuk.carparking.models.Collision;
 import ru.golyashchuk.carparking.models.Model;
 import ru.golyashchuk.carparking.models.arena.Arena;
 import ru.golyashchuk.carparking.models.car.Car;
-import ru.golyashchuk.carparking.models.car.Collisional;
 import ru.golyashchuk.carparking.view.car.CarEnum;
 import ru.golyashchuk.carparking.view.Renderer;
 import ru.golyashchuk.carparking.view.View;
@@ -33,6 +32,7 @@ public class ArenaView implements Renderer, View {
         initializeFinish(arena);
         initializeCars(arena);
         initializeCollisions(arena);
+        cars.get(arena.getMainCar()).mainCar();
     }
 
     public void focusCar(Car car) {
@@ -47,8 +47,9 @@ public class ArenaView implements Renderer, View {
         carView.renderCar(car);
     }
 
-    public void mainCar(Car car) {
-
+    public void setMainCar(Car car) {
+        CarView carView = cars.get(car);
+        carView.mainCar();
     }
 
     @Override

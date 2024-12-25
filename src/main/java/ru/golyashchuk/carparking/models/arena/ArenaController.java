@@ -30,8 +30,9 @@ public class ArenaController {
 
     public ArenaController(Arena arena) {
         this.arena = arena;
-        arena.setFocusedCar(arena.getMainCar());
         this.arenaView = new ArenaView(arena);
+        arena.setFocusedCar(arena.getMainCar());
+        arenaView.focusCar(arena.getFocusedCar());
 
         arenaView.getView().setOnMouseClicked(this::onMouseClicked);
         arenaView.getView().setOnKeyPressed(this::onKeyPressed);

@@ -22,6 +22,15 @@ public class ResizableRectangle extends Group {
     private Circle upperRightCorner = new Circle(DEFAULT_STROKE_WIDTH);
     private Circle bottomLeftCorner = new Circle(DEFAULT_STROKE_WIDTH);
     private Circle bottomRightCorner = new Circle(DEFAULT_STROKE_WIDTH);
+    private UpdateListener updateListener;
+
+    public UpdateListener getUpdateListener() {
+        return updateListener;
+    }
+
+    public void setUpdateListener(UpdateListener updateListener) {
+        this.updateListener = updateListener;
+    }
 
     public ResizableRectangle(double width, double height) {
         rectangle = new Rectangle(width, height);
@@ -89,11 +98,17 @@ public class ResizableRectangle extends Group {
     public void setX(double x) {
         rectangle.setX(x);
         updateSidesAndCorners();
+        if (updateListener != null) {
+            updateListener.onMove(rectangle.getX(), rectangle.getY());
+        }
     }
 
     public void setY(double y) {
         rectangle.setY(y);
         updateSidesAndCorners();
+        if (updateListener != null) {
+            updateListener.onMove(rectangle.getX(), rectangle.getY());
+        }
     }
 
     public void setSidesStrokeWidth(double w) {
@@ -243,6 +258,9 @@ public class ResizableRectangle extends Group {
     private void updateSidesAndCorners() {
         updateSides();
         updateCorners();
+        if (updateListener != null) {
+            updateListener.onResize(rectangle.getWidth(), rectangle.getHeight());
+        }
     }
 
     private void updateSides() {

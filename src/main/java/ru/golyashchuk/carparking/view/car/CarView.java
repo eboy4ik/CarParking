@@ -95,7 +95,7 @@ public class CarView implements Renderer, View, Focusable {
     }
 
     public void mainCar() {
-        outline.setStroke(Color.BLUE);
+        defaultCar = mainCar;
     }
 
     @Override
