@@ -1,7 +1,11 @@
 package ru.golyashchuk.carparking.controllers;
 
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ru.golyashchuk.carparking.config.SettingsConfiguration;
@@ -18,7 +22,6 @@ public class MenuController implements Controller {
     @Override
     public void initializeScene(Stage stage) {
         this.primaryStage = stage;
-
         VBox menuLayout = new VBox();
         menuLayout.setSpacing(10);
         menuLayout.setPadding(new javafx.geometry.Insets(20, 20, 20, 20));
@@ -54,6 +57,7 @@ public class MenuController implements Controller {
         } else {
             menuScene = new Scene(menuLayout, primaryStage.getScene().getWidth(), primaryStage.getScene().getHeight());
         }
+
         primaryStage.setScene(menuScene);
         primaryStage.setTitle("Car Parking");
         primaryStage.show();

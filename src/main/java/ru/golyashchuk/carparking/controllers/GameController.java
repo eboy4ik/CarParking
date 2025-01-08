@@ -16,8 +16,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import ru.golyashchuk.carparking.config.ConfigurationManager;
 import ru.golyashchuk.carparking.models.arena.Arena;
-import ru.golyashchuk.carparking.models.arena.ArenaController;
-import ru.golyashchuk.carparking.models.arena.ArenaLevel1;
+import ru.golyashchuk.carparking.models.car.listeners.LevelCompletedListener;
 import ru.golyashchuk.carparking.utils.Serializator;
 import ru.golyashchuk.carparking.utils.arena.ArenaHandler;
 import ru.golyashchuk.carparking.view.alert.ExitConfirmationAlert;
@@ -72,7 +71,6 @@ public class GameController implements Controller, LevelCompletedListener {
         }
 
         if (event.getCode() == KeyCode.R) {
-            System.out.println("restart");
             restartGame();
         }
     }
@@ -97,7 +95,7 @@ public class GameController implements Controller, LevelCompletedListener {
         dialog.initStyle(StageStyle.UNDECORATED);
         BorderPane pane = new BorderPane();
         HBox hbox = new HBox(20);
-        hbox.setAlignment(Pos.TOP_CENTER);
+        hbox.setAlignment(Pos.CENTER);
         Button restartButton = new Button();
         ImageView restartImageView = new ImageView(new Image(ConfigurationManager.getProperty("path.program.restart")));
         restartImageView.setFitWidth(80);
@@ -141,7 +139,7 @@ public class GameController implements Controller, LevelCompletedListener {
         dialog.initStyle(StageStyle.UNDECORATED);
         BorderPane pane = new BorderPane();
         HBox hbox = new HBox(20);
-        hbox.setAlignment(Pos.TOP_CENTER);
+        hbox.setAlignment(Pos.CENTER);
         Button restartButton = new Button();
         ImageView restartImageView = new ImageView(new Image(ConfigurationManager.getProperty("path.program.restart")));
         restartImageView.setFitWidth(80);

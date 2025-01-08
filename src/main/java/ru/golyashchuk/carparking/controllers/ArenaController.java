@@ -1,4 +1,4 @@
-package ru.golyashchuk.carparking.models.arena;
+package ru.golyashchuk.carparking.controllers;
 
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.LongProperty;
@@ -8,7 +8,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
-import ru.golyashchuk.carparking.controllers.LevelCompletedListener;
+import ru.golyashchuk.carparking.models.arena.Arena;
+import ru.golyashchuk.carparking.models.car.listeners.LevelCompletedListener;
 import ru.golyashchuk.carparking.models.Collision;
 import ru.golyashchuk.carparking.models.car.Car;
 import ru.golyashchuk.carparking.models.car.Direction;
@@ -41,6 +42,8 @@ public class ArenaController {
 
         arenaView.render(arena);
         final LongProperty lastUpdateTime = new SimpleLongProperty();
+
+
         timer = new AnimationTimer() {
             @Override
             public void handle(long now) {

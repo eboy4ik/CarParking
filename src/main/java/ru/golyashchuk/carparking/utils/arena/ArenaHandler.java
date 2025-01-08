@@ -1,14 +1,9 @@
 package ru.golyashchuk.carparking.utils.arena;
 
-import javafx.scene.shape.Shape;
 import ru.golyashchuk.carparking.config.ConfigurationManager;
-import ru.golyashchuk.carparking.controllers.GameController;
-import ru.golyashchuk.carparking.models.AddableView;
 import ru.golyashchuk.carparking.models.Collision;
-import ru.golyashchuk.carparking.models.Model;
 import ru.golyashchuk.carparking.models.arena.Arena;
 import ru.golyashchuk.carparking.models.car.Car;
-import ru.golyashchuk.carparking.models.car.MathCar;
 import ru.golyashchuk.carparking.utils.Serializator;
 import ru.golyashchuk.carparking.utils.ShapeHandler;
 
