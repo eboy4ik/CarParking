@@ -18,13 +18,12 @@ public class MenuController implements Controller {
     @Override
     public void initializeScene(Stage stage) {
         this.primaryStage = stage;
-        // Создаем VBox для кнопок
+
         VBox menuLayout = new VBox();
         menuLayout.setSpacing(10);
         menuLayout.setPadding(new javafx.geometry.Insets(20, 20, 20, 20));
         menuLayout.setAlignment(javafx.geometry.Pos.CENTER);
 
-        // Создаем кнопки
         Button playButton = new Button("Играть");
         playButton.setFont(new javafx.scene.text.Font("System Bold", 18));
         playButton.setOnAction(e -> {
@@ -39,18 +38,16 @@ public class MenuController implements Controller {
         createLevelButton.setFont(new javafx.scene.text.Font("System Bold", 18));
         createLevelButton.setOnAction(e -> startLevelEditor());
 
-        Button settingsButton = new Button("Настройки");
-        settingsButton.setFont(new javafx.scene.text.Font("System Bold", 18));
-        settingsButton.setOnAction(e -> openSettings());
+        Button informationButton = new Button("Информация");
+        informationButton.setFont(new javafx.scene.text.Font("System Bold", 18));
+        informationButton.setOnAction(e -> showInformation());
 
         Button exitButton = new Button("Выход");
         exitButton.setFont(new javafx.scene.text.Font("System Bold", 18));
         exitButton.setOnAction(e -> System.exit(0));
 
-        // Добавляем кнопки в VBox
-        menuLayout.getChildren().addAll(playButton, createLevelButton, settingsButton, exitButton);
+        menuLayout.getChildren().addAll(playButton, createLevelButton, informationButton, exitButton);
 
-        // Устанавливаем сцену на Stage
         Scene menuScene;
         if (primaryStage.getScene() == null) {
             menuScene = new Scene(menuLayout, SettingsConfiguration.getWindowWidth(), SettingsConfiguration.getWindowHeight());
@@ -62,17 +59,16 @@ public class MenuController implements Controller {
         primaryStage.show();
     }
 
+    private void showInformation() {
+        new InformationController(primaryStage);
+    }
+
     private void startLevelEditor() {
         new LevelEditorController(primaryStage);
     }
 
     private void startGame() throws IOException {
-//        new GameController(primaryStage);
         new LevelChooserController(primaryStage);
-    }
-
-    private void openSettings() {
-        System.out.println("Открытие настроек...");
     }
 
 

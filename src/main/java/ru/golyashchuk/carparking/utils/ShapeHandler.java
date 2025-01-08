@@ -12,6 +12,7 @@ public class ShapeHandler {
         res.setY(rectangle.getY());
         res.setArcHeight(rectangle.getArcHeight());
         res.setArcWidth(rectangle.getArcWidth());
+        res.setRotate(rectangle.getRotate());
 
         return res;
     }

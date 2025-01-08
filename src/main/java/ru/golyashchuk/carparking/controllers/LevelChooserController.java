@@ -2,6 +2,8 @@ package ru.golyashchuk.carparking.controllers;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -48,13 +50,21 @@ public class LevelChooserController implements Controller {
 
         // Устанавливаем сцену на Stage
         Scene menuScene;
+
         if (primaryStage.getScene() == null) {
             menuScene = new Scene(menuLayout, SettingsConfiguration.getWindowWidth(), SettingsConfiguration.getWindowHeight());
         } else {
             menuScene = new Scene(menuLayout, primaryStage.getScene().getWidth(), primaryStage.getScene().getHeight());
         }
+        menuScene.setOnKeyReleased(this::onKeyReleased);
         primaryStage.setScene(menuScene);
         primaryStage.show();
+    }
+
+    private void onKeyReleased(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.ESCAPE) {
+            new MenuController(primaryStage);
+        }
     }
 
     private void userLevelPlay() {
@@ -64,7 +74,6 @@ public class LevelChooserController implements Controller {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("SER files (*.ser)", "*.ser");
         fileChooser.getExtensionFilters().add(extFilter);
         File selectedFile = fileChooser.showOpenDialog(primaryStage);
-
         if (selectedFile == null) {
             return;
         }
@@ -77,15 +86,10 @@ public class LevelChooserController implements Controller {
         if (arena != null) {
             new GameController(arena, primaryStage);
         }
-
     }
 
     private void startGame() throws IOException {
         new GameController(primaryStage);
-    }
-
-    private void openSettings() {
-        System.out.println("Открытие настроек...");
     }
 
 

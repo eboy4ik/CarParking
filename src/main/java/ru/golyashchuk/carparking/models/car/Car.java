@@ -72,4 +72,5 @@ public class Car extends PhysicCar implements Serializable, Model {
     public void straightWheels() {
         setWheelsOrientation(0);
     }
+
 }

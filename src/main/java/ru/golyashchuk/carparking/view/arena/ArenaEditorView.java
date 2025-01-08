@@ -122,6 +122,8 @@ public class ArenaEditorView implements View {
 
         if (model instanceof Rectangle) {
             arenaView.getFinish().focus();
+            focusable = arenaView.getFinish();
+            return;
         }
 
         focusable = model;
@@ -134,7 +136,7 @@ public class ArenaEditorView implements View {
         if (focusable instanceof Car) {
             arenaView.getCars().get((Car) focusable).unfocus();
         }
-        if (focusable instanceof Rectangle) {
+        if (focusable instanceof FinishView) {
             arenaView.getFinish().unfocus();
         }
 

@@ -17,6 +17,7 @@ public class Serializator {
         oos.writeDouble(rectangle.getHeight());
         oos.writeDouble(rectangle.getArcWidth());
         oos.writeDouble(rectangle.getArcHeight());
+        oos.writeDouble(rectangle.getRotate());
     }
 
     public static Rectangle deserializeRectangle(ObjectInputStream ois) throws IOException, ClassNotFoundException {
@@ -26,10 +27,12 @@ public class Serializator {
         double height = ois.readDouble();
         double arcWidth = ois.readDouble();
         double arcHeight = ois.readDouble();
+        double rotate = ois.readDouble();
 
         Rectangle rect = new Rectangle(x, y, width, height);
         rect.setArcWidth(arcWidth);
         rect.setArcHeight(arcHeight);
+        rect.setRotate(rotate);
 
         return rect;
     }

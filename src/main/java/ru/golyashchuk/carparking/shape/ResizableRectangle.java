@@ -96,18 +96,16 @@ public class ResizableRectangle extends Group {
 
 
     public void setX(double x) {
-        rectangle.setX(x);
-        updateSidesAndCorners();
+        super.setLayoutX(x);
         if (updateListener != null) {
-            updateListener.onMove(rectangle.getX(), rectangle.getY());
+            updateListener.onMove(x, super.getLayoutY());
         }
     }
 
     public void setY(double y) {
-        rectangle.setY(y);
-        updateSidesAndCorners();
+        super.setLayoutY(y);
         if (updateListener != null) {
-            updateListener.onMove(rectangle.getX(), rectangle.getY());
+            updateListener.onMove(super.getLayoutX(), y);
         }
     }
 
@@ -188,58 +186,58 @@ public class ResizableRectangle extends Group {
     }
 
     private void onMouseDraggedBottomSide(MouseEvent mouseEvent) {
-        this.rectangle.setHeight(Math.max(minHeight, mouseEvent.getY() - rectangle.getY()));
+        rectangle.setHeight(Math.max(minHeight, mouseEvent.getY()));
         updateSidesAndCorners();
     }
 
     private void onMouseDraggedUpperRightCorner(MouseEvent mouseEvent) {
-        double bottomY = rectangle.getY() + rectangle.getHeight();
-        rectangle.setY(Math.min(mouseEvent.getY(), bottomY - minHeight));
-        rectangle.setWidth(Math.max(minWidth, mouseEvent.getX() - rectangle.getX()));
+        double bottomY = rectangle.getHeight();
+        super.setLayoutY(Math.min(super.getLayoutY() + mouseEvent.getY(), super.getLayoutY() + bottomY - minHeight));
+        rectangle.setWidth(Math.max(minWidth, mouseEvent.getX()));
         rectangle.setHeight(Math.max(minHeight, bottomY - mouseEvent.getY()));
         updateSidesAndCorners();
     }
 
     private void onMouseDraggedBottomLeftCorner(MouseEvent mouseEvent) {
-        double rightX = rectangle.getX() + rectangle.getWidth();
-        rectangle.setX(Math.min(rightX - minWidth, mouseEvent.getX()));
+        double rightX = rectangle.getWidth();
+        super.setLayoutX(Math.min(super.getLayoutX() + rightX - minWidth, super.getLayoutX() + mouseEvent.getX()));
         rectangle.setWidth(Math.max(minWidth, rightX - mouseEvent.getX()));
-        rectangle.setHeight(Math.max(minHeight, mouseEvent.getY() - rectangle.getY()));
+        rectangle.setHeight(Math.max(minHeight, mouseEvent.getY()));
         updateSidesAndCorners();
     }
 
     private void onMouseDraggedUpperLeftCorner(MouseEvent mouseEvent) {
-        double rightX = rectangle.getX() + rectangle.getWidth();
-        double bottomY = rectangle.getY() + rectangle.getHeight();
-        rectangle.setX(Math.min(rightX - minWidth, mouseEvent.getX()));
-        rectangle.setY(Math.min(mouseEvent.getY(), bottomY - minHeight));
+        double rightX = rectangle.getWidth();
+        double bottomY = rectangle.getHeight();
+        super.setLayoutX(Math.min(super.getLayoutX() + rightX - minWidth, super.getLayoutX() + mouseEvent.getX()));
+        super.setLayoutY(Math.min(super.getLayoutY() + mouseEvent.getY(), super.getLayoutY() + bottomY - minHeight));
         rectangle.setWidth(Math.max(minWidth, rightX - mouseEvent.getX()));
         rectangle.setHeight(Math.max(minHeight, bottomY - mouseEvent.getY()));
         updateSidesAndCorners();
     }
 
     private void onMouseDraggedBottomRightCorner(MouseEvent mouseEvent) {
-        rectangle.setWidth(Math.max(minWidth, mouseEvent.getX() - rectangle.getX()));
-        rectangle.setHeight(Math.max(minHeight, mouseEvent.getY() - rectangle.getY()));
+        rectangle.setWidth(Math.max(minWidth, mouseEvent.getX()));
+        rectangle.setHeight(Math.max(minHeight, mouseEvent.getY()));
         updateSidesAndCorners();
     }
 
     private void onMouseDraggedUpperSide(MouseEvent mouseEvent) {
-        double bottomY = rectangle.getY() + rectangle.getHeight();
-        rectangle.setY(Math.min(mouseEvent.getY(), bottomY - minHeight));
+        double bottomY = rectangle.getHeight();
+        super.setLayoutY(Math.min(super.getLayoutY() + mouseEvent.getY(), super.getLayoutY() + bottomY - minHeight));
         rectangle.setHeight(Math.max(minHeight, bottomY - mouseEvent.getY()));
         updateSidesAndCorners();
     }
 
     private void onMouseDraggedLeftSide(MouseEvent mouseEvent) {
-        double rightX = rectangle.getX() + rectangle.getWidth();
-        rectangle.setX(Math.min(mouseEvent.getX(), rightX - minWidth));
+        double rightX = rectangle.getWidth();
+        super.setLayoutX(Math.min(super.getLayoutX() + mouseEvent.getX(), super.getLayoutX() + rightX - minWidth));
         rectangle.setWidth(Math.max(minWidth, rightX - mouseEvent.getX()));
         updateSidesAndCorners();
     }
 
     private void onMouseDraggedRightSide(MouseEvent mouseEvent) {
-        this.rectangle.setWidth(Math.max(minWidth, mouseEvent.getX() - rectangle.getX()));
+        rectangle.setWidth(Math.max(minWidth, mouseEvent.getX()));
         updateSidesAndCorners();
     }
 
@@ -271,31 +269,31 @@ public class ResizableRectangle extends Group {
     }
 
     private void updateBottomSide() {
-        bottomSide.setStartX(rectangle.getX());
-        bottomSide.setStartY(rectangle.getY() + rectangle.getHeight());
-        bottomSide.setEndX(rectangle.getX() + rectangle.getWidth());
-        bottomSide.setEndY(rectangle.getY() + rectangle.getHeight());
+        bottomSide.setStartX(0);
+        bottomSide.setStartY(rectangle.getHeight());
+        bottomSide.setEndX(rectangle.getWidth());
+        bottomSide.setEndY(rectangle.getHeight());
     }
 
     private void updateUpperSide() {
-        upperSide.setStartX(rectangle.getX());
-        upperSide.setStartY(rectangle.getY());
-        upperSide.setEndX(rectangle.getX() + rectangle.getWidth());
-        upperSide.setEndY(rectangle.getY());
+        upperSide.setStartX(0);
+        upperSide.setStartY(0);
+        upperSide.setEndX(rectangle.getWidth());
+        upperSide.setEndY(0);
     }
 
     private void updateRightSide() {
-        rightSide.setStartX(rectangle.getX() + rectangle.getWidth());
-        rightSide.setStartY(rectangle.getY());
-        rightSide.setEndX(rectangle.getX() + rectangle.getWidth());
-        rightSide.setEndY(rectangle.getY() + rectangle.getHeight());
+        rightSide.setStartX(rectangle.getWidth());
+        rightSide.setStartY(0);
+        rightSide.setEndX(rectangle.getWidth());
+        rightSide.setEndY(rectangle.getHeight());
     }
 
     private void updateLeftSide() {
-        leftSide.setStartX(rectangle.getX());
-        leftSide.setStartY(rectangle.getY());
-        leftSide.setEndX(rectangle.getX());
-        leftSide.setEndY(rectangle.getY() + rectangle.getHeight());
+        leftSide.setStartX(0);
+        leftSide.setStartY(0);
+        leftSide.setEndX(0);
+        leftSide.setEndY(rectangle.getHeight());
     }
 
     private void updateCorners() {
@@ -306,23 +304,23 @@ public class ResizableRectangle extends Group {
     }
 
     private void updateBottomRightCorner() {
-        bottomRightCorner.setCenterX(rectangle.getX() + rectangle.getWidth());
-        bottomRightCorner.setCenterY(rectangle.getY() + rectangle.getHeight());
+        bottomRightCorner.setCenterX(rectangle.getWidth());
+        bottomRightCorner.setCenterY(rectangle.getHeight());
     }
 
     private void updateBottomLeftCorner() {
-        bottomLeftCorner.setCenterX(rectangle.getX());
-        bottomLeftCorner.setCenterY(rectangle.getY() + rectangle.getHeight());
+        bottomLeftCorner.setCenterX(0);
+        bottomLeftCorner.setCenterY(rectangle.getHeight());
     }
 
     private void updateUpperRightCorner() {
-        upperRightCorner.setCenterX(rectangle.getX() + rectangle.getWidth());
-        upperRightCorner.setCenterY(rectangle.getY());
+        upperRightCorner.setCenterX(rectangle.getWidth());
+        upperRightCorner.setCenterY(0);
     }
 
     private void updateUpperLeftCorner() {
-        upperLeftCorner.setCenterX(rectangle.getX());
-        upperLeftCorner.setCenterY(rectangle.getY());
+        upperLeftCorner.setCenterX(0);
+        upperLeftCorner.setCenterY(0);
     }
 
     public void setSidesColor(Color color) {

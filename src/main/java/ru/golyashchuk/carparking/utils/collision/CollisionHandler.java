@@ -8,7 +8,7 @@ public class CollisionHandler {
     }
 
     public static boolean containsShape(Shape main, Shape inner) {
-        return Shape.union(main, inner).getBoundsInParent().equals(main.getBoundsInParent());
+        return Shape.subtract(Shape.union(main, inner), main).getBoundsInParent().isEmpty();
     }
 
     public static boolean intersectShapes(Shape first, Shape second) {

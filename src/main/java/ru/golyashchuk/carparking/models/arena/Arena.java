@@ -11,8 +11,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Arena implements Serializable, Model {
     private int width;
@@ -20,8 +21,8 @@ public class Arena implements Serializable, Model {
 
     private Car mainCar;
     private transient Rectangle finish;
-    private List<Car> cars = new LinkedList<>();
-    private List<Collision> collisions = new LinkedList<>();
+    private Set<Car> cars = new HashSet<>();
+    private Set<Collision> collisions = new HashSet<>();
 
     private Car focusedCar;
 
@@ -56,19 +57,19 @@ public class Arena implements Serializable, Model {
         return finish;
     }
 
-    public List<Car> getCars() {
+    public Set<Car> getCars() {
         return cars;
     }
 
-    public void setCars(List<Car> cars) {
+    public void setCars(Set<Car> cars) {
         this.cars = cars;
     }
 
-    public List<Collision> getCollisions() {
+    public Set<Collision> getCollisions() {
         return collisions;
     }
 
-    public void setCollisions(List<Collision> collisions) {
+    public void setCollisions(Set<Collision> collisions) {
         this.collisions = collisions;
     }
 

@@ -1,5 +1,6 @@
 package ru.golyashchuk.carparking.view.arena;
 
+import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -15,8 +16,8 @@ import ru.golyashchuk.carparking.view.car.CarEnum;
 import ru.golyashchuk.carparking.view.car.CarView;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class EditorArenaView implements Renderer, View {
     private Pane view;
@@ -45,15 +46,6 @@ public class EditorArenaView implements Renderer, View {
         this.finish = new FinishView(finish);
         this.finish.getView().setOnMouseDragged(this::onMouseDraggedFinish);
         view.getChildren().add(this.finish.getView());
-    }
-
-    private void onMouseDraggedFinish(MouseEvent mouseEvent) {
-        if (this.finish == null) {
-            return;
-        }
-        this.finish.getView().setX(mouseEvent.getX());
-        this.finish.getView().setY(mouseEvent.getY());
-        updateListener.onMove(finish, mouseEvent.getX(), mouseEvent.getY());
     }
 
 
@@ -95,13 +87,13 @@ public class EditorArenaView implements Renderer, View {
         setFinish(finish);
     }
 
-    private void initializeCollisions(List<Collision> collisions) {
+    private void initializeCollisions(Set<Collision> collisions) {
         for (Collision collision : collisions) {
             addCollision(collision);
         }
     }
 
-    private void initializeCars(List<Car> cars) {
+    private void initializeCars(Set<Car> cars) {
         for (Car car : cars) {
             addCar(car);
         }
@@ -134,10 +126,23 @@ public class EditorArenaView implements Renderer, View {
         Arena arena = (Arena) model;
 
         renderCars(arena.getCars());
+        renderCollisions(arena.getCollisions());
+        if (finish != null) {
+            finish.render(arena.getFinish());
+        }
 //        bounds.render();
     }
 
-    public void renderCars(List<Car> cars) {
+    private void renderCollisions(Set<Collision> collisions) {
+        for (Collision collision : collisions) {
+            EditorCollisionView collisionView = this.collisions.get(collision);
+            if (collisionView != null) {
+                collisionView.render(collision);
+            }
+        }
+    }
+
+    private void renderCars(Set<Car> cars) {
         for (Car car : cars) {
             this.cars.get(car).renderCar(car);
         }
@@ -151,10 +156,6 @@ public class EditorArenaView implements Renderer, View {
         carView.renderCar(car);
     }
 
-    private void onMouseDraggedCar(MouseEvent event, Car car) {
-        System.out.println("drag: " + event.getX());
-        updateListener.onMove(car, event.getX(), event.getY());
-    }
 
     public void addCollision(Collision collision) {
         EditorCollisionView collisionView = new EditorCollisionView(collision);
@@ -174,16 +175,51 @@ public class EditorArenaView implements Renderer, View {
                 }
             }
         });
-        collisions.put(collision, collisionView);
+        this.collisions.put(collision, collisionView);
         this.view.getChildren().add(collisionView.getView());
         collisionView.render(collision);
     }
 
-    private void onMouseDraggedCollision(MouseEvent mouseEvent, Collision collision) {
-        collisions.get(collision).getView().setX(mouseEvent.getX());
-        collisions.get(collision).getView().setY(mouseEvent.getY());
-
-        updateListener.onMove(collision, mouseEvent.getX(), mouseEvent.getY());
+    private void onMouseDraggedFinish(MouseEvent mouseEvent) {
+        if (this.finish == null) {
+            return;
+        }
+        Point2D point = getView().sceneToLocal(mouseEvent.getSceneX(), mouseEvent.getSceneY());
+        this.finish.getView().setX(point.getX());
+        this.finish.getView().setY(point.getY());
+        updateListener.onMove(finish, point.getX(), point.getY());
     }
 
+    private void onMouseDraggedCar(MouseEvent mouseEvent, Car car) {
+        Point2D point = getView().sceneToLocal(mouseEvent.getSceneX(), mouseEvent.getSceneY());
+        this.cars.get(car).setPosition(point.getX(), point.getY());
+        if (updateListener != null) {
+            updateListener.onMove(car, point.getX(), point.getY());
+        }
+    }
+
+    private void onMouseDraggedCollision(MouseEvent mouseEvent, Collision collision) {
+        Point2D point = getView().sceneToLocal(mouseEvent.getSceneX(), mouseEvent.getSceneY());
+        collisions.get(collision).getView().setX(point.getX());
+        collisions.get(collision).getView().setY(point.getY());
+        if (updateListener != null) {
+            updateListener.onMove(collision, point.getX(), point.getY());
+        }
+    }
+
+    public void deleteCar(Car car) {
+        if (cars.containsKey(car)) {
+            CarView deletedCarView = cars.get(car);
+            view.getChildren().remove(deletedCarView.getView());
+            cars.remove(car);
+        }
+    }
+
+    public void deleteCollision(Collision collision) {
+        if (collisions.containsKey(collision)) {
+            EditorCollisionView deletedCollisionView = collisions.get(collision);
+            view.getChildren().remove(deletedCollisionView.getView());
+            collisions.remove(collision);
+        }
+    }
 }

@@ -12,10 +12,7 @@ import ru.golyashchuk.carparking.view.Renderer;
 import ru.golyashchuk.carparking.view.View;
 import ru.golyashchuk.carparking.view.car.CarView;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ArenaView implements Renderer, View {
     private Pane view;
@@ -73,7 +70,7 @@ public class ArenaView implements Renderer, View {
 
     }
 
-    public void renderCars(List<Car> cars) {
+    public void renderCars(Set<Car> cars) {
         for (Car car : cars) {
             this.cars.get(car).renderCar(car);
         }

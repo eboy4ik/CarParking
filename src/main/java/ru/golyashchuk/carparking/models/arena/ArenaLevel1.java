@@ -16,6 +16,7 @@ public class ArenaLevel1 extends Arena {
 
 //        --- FINISH
         Rectangle finish = new Rectangle(50, 100, 70, 120);
+        finish.setRotate(100);
         setFinish(finish);
         addCar(car);
         addCar(car2);

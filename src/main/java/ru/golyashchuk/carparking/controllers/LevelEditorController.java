@@ -2,9 +2,7 @@ package ru.golyashchuk.carparking.controllers;
 
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -19,10 +17,12 @@ import ru.golyashchuk.carparking.view.alert.ExitConfirmationAlert;
 import ru.golyashchuk.carparking.view.arena.*;
 
 import java.io.*;
+import java.util.Map;
 import java.util.Optional;
 
 public class LevelEditorController implements Controller, ArenaViewUpdateListener {
-    public static String ARENA_DIR_PATH = "/src/main/resources/levels";
+    public static final String ARENA_DIR_PATH = "/src/main/resources/levels";
+    public static final double ANGLE_STEP = 22.5;
     private Stage primaryStage;
     private Arena arena;
     private ArenaEditorView editorView;
@@ -41,12 +41,23 @@ public class LevelEditorController implements Controller, ArenaViewUpdateListene
         initializeEditorView();
 
         pane.setOnKeyPressed(this::onKeyPressed);
+        pane.setOnMouseReleased(this::onMouseReleased);
+        pane.setOnScroll(this::onScroll);
         Scene scene = new Scene(pane, stage.getScene().getWidth(), stage.getScene().getHeight());
         primaryStage.setScene(scene);
         primaryStage.show();
 
         pane.requestFocus();
     }
+
+    private void onMouseReleased(MouseEvent mouseEvent) {
+        editorView.getArenaView().render(arena);
+    }
+
+    private void onScroll(ScrollEvent scrollEvent) {
+        onRotate(editorView.getFocusable(), Math.signum(scrollEvent.getDeltaY()) * ANGLE_STEP);
+    }
+
 
     private void initializeArena() {
         arena = new Arena();
@@ -57,7 +68,7 @@ public class LevelEditorController implements Controller, ArenaViewUpdateListene
     private void initializeEditorView() {
         editorView = new ArenaEditorView(arena);
 
-        editorView.getArenaView().getView().setOnMouseClicked(this::onMouseClicked);
+        editorView.getArenaView().getView().setOnMousePressed(this::onMouseClicked);
         editorView.getArenaView().getView().setOnMouseDragged(this::onMouseDragged);
         editorView.getArenaView().setUpdateListener(this);
 
@@ -94,11 +105,7 @@ public class LevelEditorController implements Controller, ArenaViewUpdateListene
         }
 
         if (keyEvent.getCode() == KeyCode.DELETE) {
-//            switch (editorView.getFocusable()) {
-//                case ModelType.CAR:
-//
-//            }
-
+            deleteSelectedObject();
         }
     }
 
@@ -108,6 +115,7 @@ public class LevelEditorController implements Controller, ArenaViewUpdateListene
         }
         arena.addCar(car);
         editorView.getArenaView().addCar(car);
+
     }
 
     public void setFinish(Rectangle finish) {
@@ -137,6 +145,26 @@ public class LevelEditorController implements Controller, ArenaViewUpdateListene
             Collision collision = new Collision(new Rectangle(x, y, 100, 100));
             addCollision(collision);
         }
+
+        editorView.setSelectedModel(null);
+    }
+
+    public void deleteSelectedObject() {
+        Object focusable = editorView.getFocusable();
+        if (focusable == null) {
+            return;
+        }
+        if (focusable instanceof Car && arena.getCars().contains(focusable)) {
+            arena.getCars().remove(focusable);
+            editorView.getArenaView().deleteCar((Car) focusable);
+        }
+
+        if (focusable instanceof Collision && arena.getCollisions().contains(focusable)) {
+            arena.getCollisions().remove(focusable);
+            editorView.getArenaView().deleteCollision((Collision) focusable);
+        }
+        editorView.getArenaView().render(arena);
+        editorView.setFocusable(null);
     }
 
     public void focus(double x, double y) {
@@ -217,16 +245,11 @@ public class LevelEditorController implements Controller, ArenaViewUpdateListene
 
     @Override
     public void onMove(Object object, double newX, double newY) {
-        if (object instanceof Car) {
-            for (Car car : arena.getCars()) {
-                if (car == object) {
-                    car.setX(newX);
-                    car.setY(newY);
-                    editorView.getArenaView().render(arena);
-                    System.out.println(newX);
-                    return;
-                }
-            }
+        if (object instanceof Car && arena.getCars().contains(object)) {
+            Car car = (Car) object;
+            car.setX(newX);
+            car.setY(newY);
+            return;
         }
 
         if (object instanceof FinishView) {
@@ -235,22 +258,12 @@ public class LevelEditorController implements Controller, ArenaViewUpdateListene
             return;
         }
 
-        if (object instanceof Collision) {
-            for (Collision collision : arena.getCollisions()) {
-                if (collision == object) {
-                    collision.getCollision().setX(newX);
-                    collision.getCollision().setY(newY);
-                    return;
-                }
-            }
+        if (object instanceof Collision && arena.getCollisions().contains(object)) {
+            Collision collision = (Collision) object;
+            collision.getCollision().setX(newX);
+            collision.getCollision().setY(newY);
+            return;
         }
-
-
-    }
-
-    @Override
-    public void onDelete(Object object) {
-
     }
 
     @Override
@@ -271,7 +284,25 @@ public class LevelEditorController implements Controller, ArenaViewUpdateListene
     }
 
     @Override
-    public void onRotate(Object object, double newAngle) {
+    public void onRotate(Object object, double addAngle) {
+        if (object == null) {
+            return;
+        }
 
+        if (object instanceof Car && arena.getCars().contains(object)) {
+            Car car = (Car) object;
+            car.setRotate(car.getRotate() + addAngle);
+        }
+
+        if (object instanceof FinishView) {
+            arena.getFinish().setRotate(arena.getFinish().getRotate() + addAngle);
+        }
+
+        if (object instanceof Collision && arena.getCollisions().contains(object)) {
+            Collision collision = (Collision) object;
+            collision.getCollision().setRotate(collision.getCollision().getRotate() + addAngle);
+        }
+
+        editorView.getArenaView().render(arena);
     }
 }

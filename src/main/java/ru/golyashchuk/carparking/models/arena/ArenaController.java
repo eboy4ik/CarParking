@@ -8,6 +8,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
+import ru.golyashchuk.carparking.controllers.LevelCompletedListener;
 import ru.golyashchuk.carparking.models.Collision;
 import ru.golyashchuk.carparking.models.car.Car;
 import ru.golyashchuk.carparking.models.car.Direction;
@@ -23,14 +24,13 @@ public class ArenaController {
 
     private final Set<KeyCode> pressedKeys = new HashSet<>();
     private final AnimationTimer timer;
+    private LevelCompletedListener levelCompletedListener;
 
-    public ArenaView getArenaView() {
-        return arenaView;
-    }
 
     public ArenaController(Arena arena) {
         this.arena = arena;
         this.arenaView = new ArenaView(arena);
+
         arena.setFocusedCar(arena.getMainCar());
         arenaView.focusCar(arena.getFocusedCar());
 
@@ -44,11 +44,7 @@ public class ArenaController {
         timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-
                 double elapsedSeconds = (now - lastUpdateTime.get()) / 1_000_000_000.0;
-                if (checkWin()) {
-                    System.out.println("WIIIN");
-                }
                 updateFocusedCarState(elapsedSeconds);
                 moveCars(elapsedSeconds);
                 arenaView.renderCars(arena.getCars());
@@ -58,6 +54,17 @@ public class ArenaController {
         timer.start();
     }
 
+    public ArenaView getArenaView() {
+        return arenaView;
+    }
+
+    public LevelCompletedListener getLevelCompletedListener() {
+        return levelCompletedListener;
+    }
+
+    public void setLevelCompletedListener(LevelCompletedListener levelCompletedListener) {
+        this.levelCompletedListener = levelCompletedListener;
+    }
 
     public void focusCar(double x, double y) {
         Point2D point = new Point2D(x, y);
@@ -76,19 +83,24 @@ public class ArenaController {
 
     private void updateFocusedCarState(double time) {
         HashSet<Direction> directions = new HashSet<>();
-        if (pressedKeys.contains(KeyCode.W)) {
+        if (pressedKeys.contains(KeyCode.W) || pressedKeys.contains(KeyCode.UP)) {
             directions.add(Direction.FORWARD);
         }
-        if (pressedKeys.contains(KeyCode.S)) {
+        if (pressedKeys.contains(KeyCode.S) || pressedKeys.contains(KeyCode.DOWN)) {
             directions.add(Direction.BACK);
         }
-        if (pressedKeys.contains(KeyCode.A)) {
+        if (pressedKeys.contains(KeyCode.A) || pressedKeys.contains(KeyCode.LEFT)) {
             directions.add(Direction.LEFT);
         }
-        if (pressedKeys.contains(KeyCode.D)) {
+        if (pressedKeys.contains(KeyCode.D) || pressedKeys.contains(KeyCode.RIGHT)) {
             directions.add(Direction.RIGHT);
         }
         if (pressedKeys.contains(KeyCode.SPACE)) {
+            if (checkWin()) {
+                if (levelCompletedListener != null) {
+                    levelCompletedListener.completedLevel();
+                }
+            }
             directions.add(Direction.BRAKE);
         }
         setDirectionsFocusCar(directions, time);

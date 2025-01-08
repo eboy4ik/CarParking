@@ -11,6 +11,7 @@ public class FinishView implements Renderer, Focusable, View {
 
     public FinishView(Rectangle model) {
         view = new Rectangle(model.getX(), model.getY(), model.getWidth(), model.getHeight());
+        view.setRotate(model.getRotate());
         view.setFill(Color.rgb(0, 150, 0, 0.5));
     }
 
@@ -21,8 +22,15 @@ public class FinishView implements Renderer, Focusable, View {
 
     @Override
     public void render(Model model) {
-        Rectangle rect = (Rectangle) model;
-        view = new Rectangle(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+        render((Rectangle) model);
+    }
+
+    public void render(Rectangle rect) {
+        view.setX(rect.getX());
+        view.setY(rect.getY());
+        view.setWidth(rect.getWidth());
+        view.setHeight(rect.getHeight());
+        view.setRotate(rect.getRotate());
         view.setFill(Color.rgb(0, 150, 0, 0.5));
     }
 

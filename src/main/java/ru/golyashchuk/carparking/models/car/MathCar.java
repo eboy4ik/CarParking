@@ -62,6 +62,14 @@ public class MathCar implements Serializable {
         this.carOrientation = carOrientation;
     }
 
+    public void setRotate(double angle) {
+        setCarOrientation(Math.toRadians(angle));
+    }
+
+    public double getRotate() {
+        return Math.toDegrees(carOrientation);
+    }
+
     public double getAxleBase() {
         return axleBase;
     }
